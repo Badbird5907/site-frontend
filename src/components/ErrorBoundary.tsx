@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from "react";
-import AuthService from "../../services/auth.service";
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
