@@ -16,7 +16,7 @@ const Home = () => {
                     delay: 70,
                 }}
             /></h3>
-            <div>
+            <div className={"centered"}>
                 <Stack spacing={2} direction={"row"}>
                     <Button variant={"contained"} href={"#experience"}>Experience</Button>
                     <Button variant={"outlined"} href={"/blog"}>Blog</Button>
