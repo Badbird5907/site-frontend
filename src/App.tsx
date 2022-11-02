@@ -10,6 +10,7 @@ const MainPage = lazy(() => import("./pages/main/Main"));
 //const Blog = lazy(() => import("./pages/blog/Blog"));
 //const ViewBlog = lazy(() => import("./pages/blog/ViewBlog"));
 const ErrorPage = lazy(() => import("./pages/error"));
+const Loginpage = lazy(() => import("./pages/other/LoginPage"));
 const loggedIn = false;
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/home" element={<MainPage/>}/>
                         <Route path="/blog" element={<Blog/>}/>
+                        <Route path="/login" element={<Loginpage/>}/>
                         <Route path="/blog/view/:id" element={<ViewBlog/>}/>
                         <Route path={"*"} element={<ErrorPage message="404 Not Found"/>}/>
                     </Routes>
