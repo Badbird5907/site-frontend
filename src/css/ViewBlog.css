@@ -1,0 +1,16 @@
+.markdown-body {
+}
+.markdown-body h1 {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: 1px solid #47505c;
+}
+.markdown-title {
+    font-size: 4.5vh;
+}
+.markdown-header {
+    padding-bottom: 0.3em;
+}
+.border-bottom {
+    border-bottom: 1px solid #47505c;
+}

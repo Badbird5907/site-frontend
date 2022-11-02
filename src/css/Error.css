@@ -1,0 +1,8 @@
+.err {
+    /* Center */
+    margin: auto;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+
+}
