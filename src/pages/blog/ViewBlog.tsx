@@ -5,7 +5,9 @@ import Settings from "../../../config/config-dev.json";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
 import '../../css/ViewBlog.css';
+//@ts-ignore
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
+//@ts-ignore
 import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import {Button, Chip, Container} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
