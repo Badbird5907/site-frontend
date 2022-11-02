@@ -67,9 +67,10 @@ const ViewBlog = (props: any) => {
                         <div>
                             <div className={"centered"}>
                                 {tags.map((tag: any) => {
+                                    const urlEncoded = encodeURIComponent(tag);
                                         return (
                                             <div className={"tag"}>
-                                                <Chip label={tag}/>
+                                                <Chip key={"tag-" + {urlEncoded}} label={tag}/>
                                             </div>
                                         )
                                     }
