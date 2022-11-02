@@ -1,7 +1,7 @@
 import React, {Suspense, lazy, useEffect, useState} from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-import Blog from "./pages/blog/Blog";
+import Blogs from "./pages/blog/Blogs";
 import ViewBlog from "./pages/blog/ViewBlog";
 import AuthService from "./services/AuthService";
 import verifyAuth from "./services/auth-verify";
@@ -27,7 +27,7 @@ const App = () => {
         }
         console.log('User: ', currentUser);
         console.log('Logged in: ', loggedIn);
-    });
+    }, []);
     function logout() {
         AuthService.logout().then(r => {
             localStorage.removeItem("user");
@@ -41,9 +41,9 @@ const App = () => {
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/home" element={<MainPage/>}/>
-                        <Route path="/blog" element={<Blog/>}/>
+                        <Route path="/blog" element={<Blogs/>}/>
                         <Route path="/login" element={<Loginpage/>}/>
-                        <Route path="/blog/view/:id" element={<ViewBlog/>}/>
+                        <Route path="/blog/:id" element={<ViewBlog/>}/>
                         <Route path={"*"} element={<ErrorPage message="404 Not Found"/>}/>
                     </Routes>
                 </Suspense>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {backendURL} from "./APIService";
 
-const API_URL = backendURL + "/api/auth/";
+const API_URL = backendURL + "auth/";
 
 class AuthService {
     // @ts-ignore

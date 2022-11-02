@@ -2,16 +2,20 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm'
 import '../../css/ViewBlog.css';
 //@ts-ignore
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore
 import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import {Chip, Container} from "@mui/material";
+import {Button, Chip, Container, Fab} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
 import {backendURL} from "../../services/APIService";
+import Box from "@mui/material/Box";
+import EditIcon from '@mui/icons-material/Edit';
+import AuthService from "../../services/AuthService";
 
 const ViewBlog = (props: any) => {
     const params = useParams();
@@ -22,7 +26,7 @@ const ViewBlog = (props: any) => {
     const [error, setError]: any = useState(false);
     const [githubURL, setGithubURL]: any = useState(null);
     useEffect(() => {
-        axios.get(backendURL + "api/blog/content/get/" + id).then((res) => {
+        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
             console.log(res.data);
             setData(res.data);
             if (res.data.githubURL) {
@@ -34,8 +38,10 @@ const ViewBlog = (props: any) => {
             const timestamp = res.data.timestamp;
             var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
             setTimestamp(date);
-            const resTags = res.data.tags;
-            setTags(resTags);
+            if (res.data.tags) {
+                const resTags = res.data.tags;
+                setTags(resTags);
+            }
         })
             .catch((err) => {
                 console.log(err);
@@ -63,11 +69,22 @@ const ViewBlog = (props: any) => {
             <div>
                 <Container fixed>
                     <div className={"markdown-header"}>
-                        <h1 className={"centered markdown-title"}>{data.title}</h1>
+                        <div>
+                            <h1 className={"centered markdown-title"}>
+                                <Button variant={"outlined"} sx={{
+                                    alignSelf: "flex-start",
+                                    display: "inline-flex"
+                                }} onClick={()=> {
+                                    // go back
+                                    history.back();
+                                }}>Back</Button>
+                                {data.title}
+                            </h1>
+                        </div>
                         <div>
                             <div className={"centered"}>
-                                {tags.map((tag: any) => {
-                                    const urlEncoded = encodeURIComponent(tag);
+                                {tags && tags.map((tag: any) => {
+                                        const urlEncoded = encodeURIComponent(tag);
                                         return (
                                             <div className={"tag"}>
                                                 <Chip key={"tag-" + {urlEncoded}} label={tag}/>
@@ -104,9 +121,23 @@ const ViewBlog = (props: any) => {
                                 }
                             }}
                             children={data.content}
-                            rehypePlugins={[remarkGfm]}/>
+                            rehypePlugins={[remarkGfm, rehypeRaw]}/>
                     </div>
                 </Container>
+
+                {
+                    AuthService.isLoggedIn() ? (
+                        <Fab color="primary" aria-label="add" onClick={() => {
+                            window.location.href += '/edit'
+                        }} sx={{
+                            position: 'fixed',
+                            bottom: 16,
+                            right: 16,
+                        }}>
+                            <EditIcon/>
+                        </Fab>
+                    ) : null
+                }
             </div>
         );
     } else {

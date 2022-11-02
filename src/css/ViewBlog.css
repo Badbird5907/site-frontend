@@ -23,3 +23,10 @@
 .tag {
     color: white; !important;
 }
+.edit-button {
+    /* Stick it to the bottom right so it stays there even when scrolling*/
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 10;
+}
