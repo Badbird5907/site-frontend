@@ -10,6 +10,7 @@ import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import {Button, Chip, Container} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
+import {backendURL} from "../../services/APIService";
 
 const ViewBlog = (props: any) => {
     const params = useParams();
@@ -18,8 +19,7 @@ const ViewBlog = (props: any) => {
     const [timestamp, setTimestamp]: any = useState(null);
     const [tags, setTags]: any = useState([]);
     useEffect(() => {
-        const backendUrl = Settings["backend-url"];
-        axios.get(backendUrl + "api/blog/content/get/" + id).then((res) => {
+        axios.get(backendURL + "api/blog/content/get/" + id).then((res) => {
             console.log(res.data);
             setData(res.data);
             const timestamp = res.data.timestamp;
