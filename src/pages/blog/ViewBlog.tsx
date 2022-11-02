@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'
 import '../../css/ViewBlog.css';
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import {Container} from "@mui/material";
+import {Button, Chip, Container} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
 
@@ -16,6 +16,7 @@ const ViewBlog = (props: any) => {
     const id = params.id;
     const [data, setData]: any = useState(null);
     const [timestamp, setTimestamp]: any = useState(null);
+    const [tags, setTags]: any = useState([]);
     useEffect(() => {
         const backendUrl = Settings["backend-url"];
         axios.get(backendUrl + "api/blog/content/get/" + id).then((res) => {
@@ -24,6 +25,8 @@ const ViewBlog = (props: any) => {
             const timestamp = res.data.timestamp;
             var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
             setTimestamp(date);
+            const resTags = res.data.tags;
+            setTags(resTags);
         });
     }, [])
     if (data != null) {
@@ -33,9 +36,19 @@ const ViewBlog = (props: any) => {
                     <div className={"markdown-header"}>
                         <h1 className={"centered markdown-title"}>{data.title}</h1>
                         <div>
+                            <div className={"centered"}>
+                                {tags.map((tag: any) => {
+                                    return (
+                                        <div className={"tag"}>
+                                            <Chip label={tag}/>
+                                        </div>
+                                    )
+                                }
+                                )}
+                            </div>
                             <div className={"center-horizontal"}>
                                 <WatchLater/>
-                                <span>{timestamp}</span>
+                                <span>&nbsp;{timestamp}</span>
                             </div>
                         </div>
                         <h1 className={"centered border-bottom"}></h1>
@@ -72,5 +85,4 @@ const ViewBlog = (props: any) => {
         )
     }
 };
-
 export default ViewBlog;

@@ -8,9 +8,18 @@
 .markdown-title {
     font-size: 4.5vh;
 }
+.blog-header {
+
+}
 .markdown-header {
     padding-bottom: 0.3em;
 }
 .border-bottom {
     border-bottom: 1px solid #47505c;
+}
+.line-height-1_1 {
+    line-height: 1.1;
+}
+.tag {
+    color: white; !important;
 }
