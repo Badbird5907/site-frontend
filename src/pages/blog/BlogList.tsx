@@ -28,60 +28,67 @@ const BlogList = (props: any) => {
     if (data) {
         console.log('Data', data);
         return (
-            <div>
-                <Grid container spacing={2}>
-                    {data.map((item: any) => {
-                        const id: string = item.id;
-                        const title: string = item.title;
-                        const timestamp: number = item.timestamp;
-                        const authorId: string = item.authorId;
-                        const author: string = item.author;
-                        const authorImg: string = item.authorImg;
-                        const safeName: string = item.safeName; // URLencoded title, also used to access blog
-                        const location: any = item.location; // json object of where the markdown files are hosted, ignore
-                        const imageURL: string = item.image;
-                        const description: string = item.description;
-                        const date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
-                        return (
-                            <Grid item md={40} key={id}>
-                                <Card variant={'outlined'}
-                                      sx={{
-                                          maxWidth: '40%',
-                                          backgroundColor: '#1e1e1e',
-                                          margin: '10px',
-                                      }}
-                                      key={id}
-                                >
-                                    {imageURL ? <CardMedia
-                                        component="img"
-                                        height="194"
-                                        image={imageURL}
-                                        alt="Image"
-                                    /> : null}
-                                    <h2 className={"wh-imp centered"}>{title}</h2>
-                                    <CardContent sx={{
+            <div className={"row"}>
+                {data.map((item: any) => {
+                    const id: string = item.id;
+                    const title: string = item.title;
+                    const timestamp: number = item.timestamp;
+                    const authorId: string = item.authorId;
+                    const author: string = item.author;
+                    const authorImg: string = item.authorImg;
+                    const safeName: string = item.safeName; // URLencoded title, also used to access blog
+                    const location: any = item.location; // json object of where the markdown files are hosted, ignore
+                    const imageURL: string = item.image;
+                    const description: string = item.description;
+                    const date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
+                    return (
+                        <article key={id}>
+                            <Card variant={'outlined'}
+                                  sx={{
+                                      backgroundColor: '#1e1e1e',
+
+                                  }}
+                                  key={id}
+                                  className={"inner"}
+                            >
+                                {imageURL ? <CardMedia
+                                    component="img"
+                                    height="194"
+                                    image={imageURL}
+                                    alt="Image"
+                                /> : null}
+                                <h2 className={"wh-imp centered"}>{title}</h2>
+                                <CardContent sx={{
+                                    marginBottom: '0px',
+                                    marginTop: '0px',
+                                    margin: '0px',
+                                    //set inner padding
+                                    padding: '1rem',
+                                }}>
+                                    <p style={{
+                                        wordWrap: 'break-word',
+                                        width: '500px',
+                                        marginTop: '0px',
+                                        margin: '0px',
                                         marginBottom: '0px',
+                                    }} className={"centered wh-imp"}>{description}</p>
+                                </CardContent>
+                                <div className={"center-horizontal"}>
+                                    <CardActions sx={{
+                                        marginTop: '0px',
                                         padding: '0px'
                                     }}>
-                                        <Typography sx={{
-                                            marginBottom: '0px'
-                                        }} variant="h6" color="text.secondary" className={"wh-imp centered"}>
-                                            {description}
-                                        </Typography>
-                                    </CardContent>
-                                    <div className={"center-horizontal"}>
-                                        <CardActions sx={{
+                                        <CardInfo style={{
+                                            marginBottom: '0px',
                                             marginTop: '0px',
                                             padding: '0px'
-                                        }}>
-                                            <CardInfo date={date} author={author} authorImg={authorImg}/>
-                                        </CardActions>
-                                    </div>
-                                </Card>
-                            </Grid>
-                        )
-                    })}
-                </Grid>
+                                        }} date={date} author={author} authorImg={authorImg}/>
+                                    </CardActions>
+                                </div>
+                            </Card>
+                        </article>
+                    )
+                })}
             </div>
         );
     } else {
@@ -102,8 +109,7 @@ const CardInfo = (props: any) => {
             <div style={{
                 display: 'flex',
             }}>
-                <h5 className={"wh-imp"}>{author}</h5>
-                <h5 className={"wh-imp"}>&nbsp;&bull;&nbsp;{date}</h5>
+                <h5 className={"wh-imp"}>{author}&nbsp;&bull;&nbsp;{date}</h5>
             </div>
         </>
     );
