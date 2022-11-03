@@ -22,8 +22,8 @@ const Home = () => {
             </h3>
             <div className={"centered"}>
                 <Stack spacing={2} direction={"row"}>
-                    <Button variant={"solid"} href={"#experience"}>Experience</Button>
-                    <Button variant={"soft"} href={"/blog"}>Blog</Button>
+                    <Button variant={"solid"} component="a" href={"#experience"}>Experience</Button>
+                    <Button variant={"soft"} component="a" href={"/blog"}>Blog</Button>
                 </Stack>
             </div>
         </div>
