@@ -8,6 +8,7 @@ function Blogs() {
     const [fetched, setFetched] = useState(false);
     const [error, setError] = useState(false);
     const [blogs, setBlogs] = useState(null)
+    const [noBlogs, setNoBlogs] = useState(false)
 
     useEffect(() => {
         // @ts-ignore - Typescript being weird
@@ -16,6 +17,7 @@ function Blogs() {
             setData(res.data);
             setBlogs(res.data.blogs);
             setFetched(true);
+            setNoBlogs(res.data.blogs.length === 0);
         }).catch((e: any) => {
             console.error(e);
             setError(true);
@@ -28,7 +30,9 @@ function Blogs() {
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
                 {error ? <h2 className={"centered"}>Error fetching blog posts!</h2> : null}
-                {fetched ? <BlogList data={blogs}/> : <h2>Fetching posts...</h2>}
+                {fetched ?
+                    noBlogs ? <h2 className={"centered"}>No blog posts found!</h2> : <BlogList data={blogs}/>
+                    : <h2>Fetching posts...</h2>}
             </Container>
         </div>
     )
