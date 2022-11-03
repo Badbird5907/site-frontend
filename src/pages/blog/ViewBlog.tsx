@@ -8,7 +8,8 @@ import '../../css/ViewBlog.css';
 //@ts-ignore
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore
-import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
+//import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
+import GHColorsPrism from "../../utils/GHColors.prism";
 import {Button, Chip, Container, Fab} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
@@ -108,7 +109,7 @@ const ViewBlog = (props: any) => {
                                     return !inline && match ? (
                                         <SyntaxHighlighter
                                             children={String(children).replace(/\n$/, '')}
-                                            style={tomorrow}
+                                            style={GHColorsPrism}
                                             language={match[1]}
                                             PreTag="div"
                                             {...props}

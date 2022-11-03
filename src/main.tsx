@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './css/index.css'
 import {SnackbarProvider} from 'notistack';
 import {createTheme,} from '@mui/material/styles';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -12,6 +14,7 @@ import '@fontsource/public-sans';
 import ErrorBoundary from "./components/ErrorBoundary";
 import App from "./App";
 import {CssBaseline, PaletteMode, ThemeProvider} from "@mui/material";
+import {LocalizationProvider} from "@mui/x-date-pickers";
 
 declare module '@mui/material/styles' {
     interface Theme {
@@ -55,9 +58,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
             <SnackbarProvider maxSnack={5}>
-                <ErrorBoundary>
-                    <App/>
-                </ErrorBoundary>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <ErrorBoundary>
+                        <App/>
+                    </ErrorBoundary>
+                </LocalizationProvider>
             </SnackbarProvider>
         </ThemeProvider>
     </React.StrictMode>

@@ -10,6 +10,7 @@ class BlogAdminService {
                tags: string[], // UUIDs
                customAuthor: string,
                customAuthorImg: string,
+               timestamp: number = -1
     ) {
         if (title == null || title == '') throw new Error("Title is required");
         if (description == null || description == '') throw new Error("Description is required");
@@ -34,6 +35,9 @@ class BlogAdminService {
         if (location.githubURL) {
             data['githubURL'] = location.githubURL;
         }
+        if (timestamp != -1) {
+            data['timestamp'] = timestamp;
+        }
 
         return axios.post(API_URL + 'create/', data);
     }
@@ -44,6 +48,7 @@ class BlogAdminService {
              tags: string[], // UUIDs
              customAuthor: string,
              customAuthorImg: string,
+             timestamp: number = -1,
              id: string
     ) {
         if (title == null || title == '') throw new Error("Title is required");
@@ -69,6 +74,9 @@ class BlogAdminService {
         }
         if (location.githubURL) {
             data['githubURL'] = location.githubURL;
+        }
+        if (timestamp != -1) {
+            data['timestamp'] = timestamp;
         }
 
         return axios.post(API_URL + 'create/', data);
