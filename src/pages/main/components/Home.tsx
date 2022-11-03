@@ -1,6 +1,7 @@
 import React from 'react';
 import Typewriter from "typewriter-effect";
-import {Button, Stack} from "@mui/material";
+import {Button, Stack} from "@mui/joy";
+//import {Button, Stack} from "@mui/material";
 
 const Home = () => {
     return (
@@ -21,8 +22,8 @@ const Home = () => {
             </h3>
             <div className={"centered"}>
                 <Stack spacing={2} direction={"row"}>
-                    <Button variant={"contained"} href={"#experience"}>Experience</Button>
-                    <Button variant={"outlined"} href={"/blog"}>Blog</Button>
+                    <Button variant={"solid"} href={"#experience"}>Experience</Button>
+                    <Button variant={"soft"} href={"/blog"}>Blog</Button>
                 </Stack>
             </div>
         </div>
