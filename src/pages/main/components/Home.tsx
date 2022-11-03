@@ -21,10 +21,13 @@ const Home = () => {
                 />
             </h3>
             <div className={"centered"}>
+                {/*
                 <Stack spacing={2} direction={"row"}>
                     <Button variant={"solid"} component="a" href={"#experience"}>Experience</Button>
                     <Button variant={"soft"} component="a" href={"/blog"}>Blog</Button>
                 </Stack>
+                */}
+                <Button variant={"solid"} component="a" href={"/blog"}>Blog</Button>
             </div>
         </div>
     );
