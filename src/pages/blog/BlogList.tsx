@@ -1,21 +1,7 @@
 import React from 'react';
-import {
-    Avatar,
-    Paper,
-    Grid,
-    styled,
-    Typography,
-    Stack,
-    Card,
-    CardHeader,
-    CardMedia,
-    CardContent,
-    CardActions, IconButton
-} from "@mui/material";
+import { Avatar, styled, Card, CardMedia, CardContent, CardActions } from "@mui/material";
 import moment from "moment/moment";
 import '../../css/components/BlogList.css'
-import {red} from "@mui/material/colors";
-import CircleIcon from '@mui/icons-material/Circle';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -46,10 +32,13 @@ const BlogList = (props: any) => {
                             <Card variant={'outlined'}
                                   sx={{
                                       backgroundColor: '#1e1e1e',
-
+                                      cursor: 'pointer'
                                   }}
                                   key={id}
                                   className={"inner"}
+                                  onClick={()=> {
+                                      window.location.href = "/blog/" + safeName;
+                                  }}
                             >
                                 {imageURL ? <CardMedia
                                     component="img"
