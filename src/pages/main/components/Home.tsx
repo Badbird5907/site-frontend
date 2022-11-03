@@ -1,6 +1,6 @@
 import React from 'react';
 import Typewriter from "typewriter-effect";
-import {Button, Stack} from "@mui/joy";
+import {Button} from "@mui/material";
 //import {Button, Stack} from "@mui/material";
 
 const Home = () => {
@@ -27,7 +27,8 @@ const Home = () => {
                     <Button variant={"soft"} component="a" href={"/blog"}>Blog</Button>
                 </Stack>
                 */}
-                <Button variant={"solid"} component="a" href={"/blog"}>Blog</Button>
+                <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{
+                }}>Blog</Button>
             </div>
         </div>
     );

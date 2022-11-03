@@ -128,7 +128,7 @@ const ViewBlog = (props: any) => {
                 {
                     AuthService.isLoggedIn() ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href += '/edit'
+                            window.location.href = "/admin/blog/" + data.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,

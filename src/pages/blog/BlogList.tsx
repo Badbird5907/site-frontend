@@ -1,7 +1,9 @@
 import React from 'react';
-import { Avatar, styled, Card, CardMedia, CardContent, CardActions } from "@mui/material";
+import {Avatar, Card, CardActions, CardContent, CardMedia, IconButton, styled} from "@mui/material";
 import moment from "moment/moment";
 import '../../css/components/BlogList.css'
+import AuthService from "../../services/AuthService";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -11,6 +13,8 @@ const Img = styled('img')({
 });
 const BlogList = (props: any) => {
     const data = props.data;
+    const loggedIn = AuthService.isLoggedIn();
+    console.log('logged in: ' + loggedIn);
     if (data) {
         console.log('Data', data);
         return (
@@ -36,17 +40,20 @@ const BlogList = (props: any) => {
                                   }}
                                   key={id}
                                   className={"inner"}
-                                  onClick={()=> {
+                                  onClick={() => {
                                       window.location.href = "/blog/" + safeName;
                                   }}
                             >
-                                {imageURL ? <CardMedia
-                                    component="img"
-                                    height="194"
-                                    image={imageURL}
-                                    alt="Image"
-                                /> : null}
-                                <h2 className={"wh-imp centered"}>{title}</h2>
+
+                                <div>
+                                    {imageURL ? <CardMedia
+                                        component="img"
+                                        height="194"
+                                        image={imageURL}
+                                        alt="Image"
+                                    /> : null}
+                                    <h2 className={"wh-imp centered"}>{title}</h2>
+                                </div>
                                 <CardContent sx={{
                                     marginBottom: '0px',
                                     marginTop: '0px',

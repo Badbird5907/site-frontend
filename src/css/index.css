@@ -3,11 +3,13 @@
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #2d2d37;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+    --main-color: #121212;
+    /*--main-color: #2d2d37;*/
+    background-color: var(--main-color);
 }
 h1 {
     font-size: 3.2em;

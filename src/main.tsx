@@ -2,17 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './css/index.css'
 import {SnackbarProvider} from 'notistack';
-import {deepmerge} from '@mui/utils';
-import {
-    Experimental_CssVarsProvider as CssVarsProvider,
-    experimental_extendTheme as extendMuiTheme,
-} from '@mui/material/styles';
-
-import {extendTheme as extendJoyTheme} from '@mui/joy/styles';
-const muiTheme = extendMuiTheme();
-const joyTheme = extendJoyTheme(JoyTheme.getJoyThemeOptions(muiTheme));
-const theme = deepmerge(joyTheme, muiTheme);
-
+import {createTheme,} from '@mui/material/styles';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -21,17 +11,54 @@ import '@fontsource/roboto/700.css';
 import '@fontsource/public-sans';
 import ErrorBoundary from "./components/ErrorBoundary";
 import App from "./App";
-import JoyTheme from "./utils/JoyTheme";
+import {CssBaseline, PaletteMode, ThemeProvider} from "@mui/material";
 
+declare module '@mui/material/styles' {
+    interface Theme {
+        status: {
+            danger: string;
+        };
+        palette: {
+            mode: 'dark',
+        }
+    }
+    interface ThemeOptions {
+        status?: {
+            danger?: string;
+        };
+    }
+    interface Palette {
+        softBlue: Palette['primary'];
+    }
+    interface PaletteOptions {
+        softBlue?: PaletteOptions['primary'];
+    }
+}
+// Update the Button's color prop options
+declare module '@mui/material/Button' {
+    interface ButtonPropsColorOverrides {
+        softBlue: true;
+    }
+}
+
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+        softBlue: {
+            main: '#1b86ff'
+        }
+    },
+});
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <CssVarsProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline/>
             <SnackbarProvider maxSnack={5}>
                 <ErrorBoundary>
                     <App/>
                 </ErrorBoundary>
             </SnackbarProvider>
-        </CssVarsProvider>
+        </ThemeProvider>
     </React.StrictMode>
 )
