@@ -1,5 +1,5 @@
 const keyList = Array(10); // konami code
-class AdminService {
+class EasterEggs {
 
     bootStrap() {
         // Add a key listener to the document
@@ -10,10 +10,10 @@ class AdminService {
             keyList.shift();
             // Check if the key list matches the konami code
             if (keyList.join('') === 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba') {
-                // If it does, open the admin panel
                 console.log('Based')
+                window.location.href = 'https://carbonhost.cloud/site-konami'
             }
         });
     }
 }
-export default new AdminService()
+export default new EasterEggs()
