@@ -139,11 +139,19 @@ const EditBlog = (props: any) => {
                 });
             }).catch((err) => {
                 console.error(err);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an error editing the blog post!',
-                    icon: 'error'
-                });
+                if (err.response.data.error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: err.response.data.error,
+                        icon: 'error'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'There was an error editing the blog post!',
+                        icon: 'error'
+                    });
+                }
             });
         } catch (e) {
             enqueueSnackbar('Error: ' + e, {variant: 'error'});
@@ -166,12 +174,16 @@ const EditBlog = (props: any) => {
                             <Stack direction={"row"} spacing={2}>
                                 <div id={"title"}>
                                     <TextField id="title" label={"Title"} variant={"outlined"}
-                                               defaultValue={data.title}/>
+                                               defaultValue={data.title} onChange={(e) => {
+                                        setTitle(e.target.value);
+                                    }}/>
                                     <FormHelperText id="title-helper-text">Must be unique.</FormHelperText>
                                 </div>
                                 <div id={"description"}>
                                     <TextField id="description" label={"Description"} variant={"outlined"}
-                                               defaultValue={data.description}/>
+                                               defaultValue={data.description} onChange={(e) => {
+                                        setDescription(e.target.value);
+                                    }}/>
                                     <FormHelperText id="description-helper-text">A short description of the
                                         blog.</FormHelperText>
                                 </div>
