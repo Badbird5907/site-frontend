@@ -27,5 +27,6 @@ class BlogService {
 
         return axios.get(url);
     }
+
 }
 export default new BlogService();

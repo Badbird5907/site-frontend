@@ -53,17 +53,16 @@ const darkTheme = createTheme({
     },
 });
 
+// removed react strict mode
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline/>
-            <SnackbarProvider maxSnack={5}>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <ErrorBoundary>
-                        <App/>
-                    </ErrorBoundary>
-                </LocalizationProvider>
-            </SnackbarProvider>
-        </ThemeProvider>
-    </React.StrictMode>
+    <ThemeProvider theme={darkTheme}>
+        <CssBaseline/>
+        <SnackbarProvider maxSnack={5}>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+                <ErrorBoundary>
+                    <App/>
+                </ErrorBoundary>
+            </LocalizationProvider>
+        </SnackbarProvider>
+    </ThemeProvider>
 )
