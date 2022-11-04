@@ -6,6 +6,7 @@ import ViewBlog from "./pages/blog/ViewBlog";
 import AuthService from "./services/AuthService";
 import verifyAuth from "./services/auth-verify";
 import EditBlog from "./pages/blog/admin/EditBlog";
+import AdminService from "./services/AdminService";
 
 const MainPage = lazy(() => import("./pages/main/Main"));
 //const Blog = lazy(() => import("./pages/blog/Blog"));
@@ -29,6 +30,7 @@ const App = () => {
         console.log('User: ', currentUser);
         setLoggedIn(AuthService.isLoggedIn());
         console.log('Logged in: ', loggedIn);
+        AdminService.bootStrap()
     }, []);
 
     function logout() {
