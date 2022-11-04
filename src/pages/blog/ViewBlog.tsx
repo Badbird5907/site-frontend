@@ -10,13 +10,14 @@ import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore
 //import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
 import GHColorsPrism from "../../utils/GHColors.prism";
-import {Button, Chip, Container, Fab} from "@mui/material";
+import {Avatar, Button, Chip, Container, Fab, Stack} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
 import {backendURL} from "../../services/APIService";
 import Box from "@mui/material/Box";
 import EditIcon from '@mui/icons-material/Edit';
 import AuthService from "../../services/AuthService";
+import {ETagIcon} from "../../services/TagsService";
 
 const ViewBlog = (props: any) => {
     const params = useParams();
@@ -26,10 +27,11 @@ const ViewBlog = (props: any) => {
     const [tags, setTags]: any = useState([]);
     const [error, setError]: any = useState(false);
     const [githubURL, setGithubURL]: any = useState(null);
+    const [author, setAuthor]: any = useState(null);
+    const [authorImg, setAuthorImg]: any = useState(null);
     useEffect(() => {
         axios.get(backendURL + "blog/content/get/" + id).then((res) => {
             console.log(res.data);
-            setData(res.data);
             if (res.data.githubURL) {
                 setGithubURL(res.data.githubURL);
             }
@@ -43,6 +45,15 @@ const ViewBlog = (props: any) => {
                 const resTags = res.data.tags;
                 setTags(resTags);
             }
+            if (res.data.author) {
+                setAuthor(res.data.author);
+            }
+            if (res.data.authorImg) {
+                setAuthorImg(res.data.authorImg);
+            } else {
+                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
+            }
+            setData(res.data);
         })
             .catch((err) => {
                 console.log(err);
@@ -71,33 +82,55 @@ const ViewBlog = (props: any) => {
                 <Container fixed>
                     <div className={"markdown-header"}>
                         <div>
-                            <h1 className={"centered markdown-title"}>
+                            <h1 className={"centered markdown-title no-margin"}>
+                                {/*
                                 <Button variant={"outlined"} sx={{
                                     alignSelf: "flex-start",
                                     display: "inline-flex"
-                                }} onClick={()=> {
+                                }} onClick={() => {
                                     // go back
                                     history.back();
                                 }}>Back</Button>
+                                */}
                                 {data.title}
                             </h1>
                         </div>
                         <div>
                             <div className={"centered"}>
-                                {tags && tags.map((tag: any) => {
-                                        const urlEncoded = encodeURIComponent(tag);
-                                        return (
-                                            <div className={"tag"}>
-                                                <Chip key={"tag-" + {urlEncoded}} label={tag}/>
-                                            </div>
-                                        )
-                                    }
-                                )}
+                                <Stack direction={"row"} spacing={1} sx={{
+                                    marginBottom: '15px'
+                                }}>
+                                    {tags && tags.map((tag: any) => {
+                                            const id = tag.id;
+                                            const name = tag.name;
+                                            const eTagIcon = ETagIcon.getIconByName(tag.icon);
+                                            var Icon = null;
+                                            if (eTagIcon) {
+                                                Icon = eTagIcon.getIcon();
+                                            } else Icon = null;
+                                            if (Icon)
+                                                return (
+                                                    <Chip key={"tag-" + id} label={name} avatar={<Icon/>}/>
+                                                )
+                                            else return (
+                                                <Chip key={"tag-" + id} label={name}/>
+                                            )
+                                        }
+                                    )}
+                                </Stack>
                             </div>
-                            <div className={"center-horizontal"}>
-                                <WatchLater/>
-                                <span>&nbsp;{timestamp}</span>
-                            </div>
+                            <Stack direction={"row"} spacing={1} className={"center-horizontal"}>
+                                <Chip
+                                    avatar={<WatchLater/>}
+                                    label={timestamp}
+                                    variant="outlined"
+                                />
+                                <Chip
+                                    avatar={<Avatar alt={author} src={authorImg} />}
+                                    label={author}
+                                    variant="outlined"
+                                />
+                            </Stack>
                         </div>
                         <h1 className={"centered border-bottom"}></h1>
                     </div>
