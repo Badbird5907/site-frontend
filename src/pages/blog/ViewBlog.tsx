@@ -152,6 +152,13 @@ const ViewBlog = (props: any) => {
                                             {children}
                                         </code>
                                     )
+                                },
+                                a({node, className, children, ...props}) {
+                                    return (
+                                        <a className={className + ' blog-link'} {...props}>
+                                            {children}
+                                        </a>
+                                    )
                                 }
                             }}
                             children={data.content}
