@@ -1,11 +1,10 @@
 import React, {useState} from "react";
 import AuthService from "../../services/AuthService";
 import Box from '@mui/material/Box';
-import {Card, CardContent, FormControl, IconButton, InputAdornment, Link, Stack, TextField} from "@mui/material";
+import {FormControl, IconButton, InputAdornment, Stack, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useSnackbar} from 'notistack';
-import Swal from "sweetalert2";
 
 const LoginPage = () => {
     const [loading, setLoading] = useState(false);
@@ -14,7 +13,7 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false)
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     function handleLogin(e: any) {
-        console.log('Logging in with: ', username, password);
+        //console.log('Logging in with: ', username, password);
         try {
             e.preventDefault();
         } catch (e) {
@@ -29,11 +28,9 @@ const LoginPage = () => {
                     variant: 'success',
                     autoHideDuration: 2500,
                 });
-                // wait 2 seconds
-
                 setTimeout(() => {
                     window.location.href = "/";
-                }, 1000);
+                }, 500);
             },
             error => {
                 const resMessage =
@@ -62,51 +59,45 @@ const LoginPage = () => {
                  autoComplete="off"
                  className={"login-form centered"}
             >
-                <Card variant={"outlined"}>
-                    <>
-                        <CardContent>
-                            <h1 className={"centered"}>Login</h1>
-                            <br/>
-                            <FormControl>
-                                <Stack spacing={2}>
-                                    <TextField id="outlined-basic"
-                                               onChange={(e)=> {
-                                                   setUsername(e.target.value)
-                                               }}
-                                               label="Username"
-                                               variant="outlined"
-                                               aria-label={"Username Input Form"}
-                                               disabled={loading}
-                                    />
-                                    <TextField id="outlined-basic" type={showPassword ? "text" : "password"}
-                                               label="Password" variant="outlined"
-                                               onChange={(e)=> {
-                                                   setPassword(e.target.value)
-                                               }}
-                                               aria-label={"Password Input Form"}
-                                               disabled={loading}
-                                               InputProps={{
-                                                   endAdornment: <>
-                                                       <InputAdornment position="end">
-                                                           <IconButton
-                                                               aria-label="toggle password visibility"
-                                                               onClick={()=> {
-                                                                   setShowPassword(!showPassword)
-                                                               }}
-                                                           >
-                                                               {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                                           </IconButton>
-                                                       </InputAdornment>
-                                                   </>
-                                               }}
-                                    />
-                                    <Button type={"submit"} color={"success"} variant="outlined" onClick={handleLogin}
-                                            disabled={loading}>Login</Button>
-                                </Stack>
-                            </FormControl>
-                        </CardContent>
-                    </>
-                </Card>
+                <h1 className={"centered"}>Login</h1>
+                <br/>
+                <FormControl>
+                    <Stack spacing={2}>
+                        <TextField id="outlined-basic"
+                                   onChange={(e)=> {
+                                       setUsername(e.target.value)
+                                   }}
+                                   label="Username"
+                                   variant="outlined"
+                                   aria-label={"Username Input Form"}
+                                   disabled={loading}
+                        />
+                        <TextField id="outlined-basic" type={showPassword ? "text" : "password"}
+                                   label="Password" variant="outlined"
+                                   onChange={(e)=> {
+                                       setPassword(e.target.value)
+                                   }}
+                                   aria-label={"Password Input Form"}
+                                   disabled={loading}
+                                   InputProps={{
+                                       endAdornment: <>
+                                           <InputAdornment position="end">
+                                               <IconButton
+                                                   aria-label="toggle password visibility"
+                                                   onClick={()=> {
+                                                       setShowPassword(!showPassword)
+                                                   }}
+                                               >
+                                                   {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                               </IconButton>
+                                           </InputAdornment>
+                                       </>
+                                   }}
+                        />
+                        <Button type={"submit"} color={"success"} variant="outlined" onClick={handleLogin}
+                                disabled={loading}>Login</Button>
+                    </Stack>
+                </FormControl>
             </Box>
         </>
     );
