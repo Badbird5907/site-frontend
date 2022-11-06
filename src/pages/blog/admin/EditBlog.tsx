@@ -21,6 +21,7 @@ const EditBlog = (props: any) => {
     const [timestamp, setTimestamp]: any = useState(null);
     const [title, setTitle]: any = useState(null);
     const [description, setDescription]: any = useState(null);
+    const [error, setError]: any = useState(false);
 
     const [content, setContent]: any = useState('');
     const [url, setURL]: any = useState('');
@@ -103,6 +104,16 @@ const EditBlog = (props: any) => {
                 console.log('new-Available tags: ', availableTags);
                 setCanRender(true);
             });
+        }).catch((err)=> {
+            console.log('Error: ', err);
+            Swal.fire({
+                title: 'Error',
+                text: 'There was an error while fetching the blog metadata. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+            setError(true);
+            setCanRender(false)
         });
     }, [])
 
@@ -163,6 +174,7 @@ const EditBlog = (props: any) => {
         <div className={"centered"}>
             <h1>Edit blog</h1>
             <span><b>ID: &nbsp;</b> {id}</span>
+            {error ? <h3>Error!</h3> : null}
             {canRender ?
                 <>
                     <br/>

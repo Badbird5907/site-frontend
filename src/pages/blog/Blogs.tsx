@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import BlogService from "../../services/BlogService";
 import BlogList from "./components/BlogList";
 import {
     Button,
-    Container,
+    Container, Fab,
     InputLabel,
     MenuItem,
     Pagination,
@@ -16,7 +16,8 @@ import {
 import {useSearchParams} from "react-router-dom";
 import TagsService from "../../services/TagsService";
 import TagFilter from "./components/TagFilter";
-import {SelectChangeEvent} from "@mui/material/Select";
+import AuthService from "../../services/AuthService";
+import AddIcon from "@mui/icons-material/Add";
 
 function Blogs() {
     const [data, setData] = useState(null);
@@ -180,6 +181,20 @@ function Blogs() {
                         : <h2>Fetching posts...</h2>}
                 </Stack>
             </Container>
+
+            {
+                AuthService.isLoggedIn() ? (
+                    <Fab color="primary" aria-label="add" onClick={() => {
+                        window.location.href = '/admin/blog/create';
+                    }} sx={{
+                        position: 'fixed',
+                        bottom: 16,
+                        right: 16,
+                    }}>
+                        <AddIcon/>
+                    </Fab>
+                ) : null
+            }
         </div>
     )
 }

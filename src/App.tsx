@@ -62,6 +62,7 @@ const App = () => {
                             loggedIn ?
                                 <>
                                     <Route path="/admin/blog/:id" element={<EditBlog/>}/>
+                                    <Route path="/admin/blog/create" element={<MainPage/>}/>
                                 </>
                                 : null
                         }
