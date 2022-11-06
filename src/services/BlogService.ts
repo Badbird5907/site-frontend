@@ -4,10 +4,10 @@ import {backendURL} from "./APIService";
 const API_URL = backendURL + "blog/";
 
 class BlogService {
-    fetchPage(pages: number = 1, size: number = 15, order: string = 'asc', search: string, tags: string[] = [], author: string = ''): any {
+    fetchPage(page: number = 1, size: number = 15, order: string = 'desc', query: string, tags: any, author: string = '') {
         var url = API_URL + 'list?';
-        if (pages != 1) {
-            url += 'page=' + pages + '&';
+        if (page != 1) {
+            url += 'page=' + page + '&';
         }
         if (size != 15) {
             url += 'size=' + size + '&';
@@ -15,11 +15,16 @@ class BlogService {
         if (order != 'asc') {
             url += 'order=' + order + '&';
         }
-        if (search != '') {
-            url += 'search=' + search + '&';
+        if (query != '') {
+            url += 'search=' + query + '&';
         }
-        if (tags.length != 0) {
-            url += 'tags=' + tags.join(',') + '&';
+        // Check if tags is an array, because it can be a string
+        if (tags != null && Array.isArray(tags)) {
+            if (tags.length != 0) {
+                url += 'tags=' + tags.join(',') + '&';
+            }
+        } else {
+            url += 'tags=' + tags + '&';
         }
         if (author != '') {
             url += 'author=' + author + '&';
@@ -29,4 +34,5 @@ class BlogService {
     }
 
 }
+
 export default new BlogService();

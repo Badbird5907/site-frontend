@@ -1,16 +1,9 @@
 import React from 'react';
-import {Avatar, Card, CardActions, CardContent, CardMedia, IconButton, styled} from "@mui/material";
+import {Avatar, Card, CardActions, CardContent, CardMedia, styled} from "@mui/material";
 import moment from "moment/moment";
-import '../../css/components/BlogList.css'
-import AuthService from "../../services/AuthService";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import '../../../css/components/BlogList.css'
+import AuthService from "../../../services/AuthService";
 
-const Img = styled('img')({
-    margin: 'auto',
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
-});
 const BlogList = (props: any) => {
     const data = props.data;
     const loggedIn = AuthService.isLoggedIn();
@@ -23,7 +16,6 @@ const BlogList = (props: any) => {
                     const id: string = item.id;
                     const title: string = item.title;
                     const timestamp: number = item.timestamp;
-                    const authorId: string = item.authorId;
                     const author: string = item.author;
                     const authorImg: string = item.authorImg;
                     const safeName: string = item.safeName; // URLencoded title, also used to access blog
