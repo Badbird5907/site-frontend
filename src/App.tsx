@@ -12,7 +12,7 @@ const MainPage = lazy(() => import("./pages/main/Main"));
 //const Blog = lazy(() => import("./pages/blog/Blog"));
 //const ViewBlog = lazy(() => import("./pages/blog/ViewBlog"));
 const ErrorPage = lazy(() => import("./pages/error"));
-const Loginpage = lazy(() => import("./pages/other/LoginPage"));
+const Loginpage = lazy(() => import("./pages/admin/LoginPage"));
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
@@ -30,6 +30,9 @@ const App = () => {
         console.log('User: ', currentUser);
         setLoggedIn(AuthService.isLoggedIn());
         console.log('Logged in: ', loggedIn);
+        if (!loggedIn) {
+            localStorage.removeItem("user"); // Remove user from local storage, sometimes it doesn't get removed if it expires or something
+        }
         EasterEggs.bootStrap()
     }, []);
 
