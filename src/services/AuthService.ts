@@ -14,7 +14,7 @@ class AuthService {
             .then(response => {
                 if (response.data.token) {
                     localStorage.setItem("user", JSON.stringify(response.data));
-                }else {
+                } else {
                     console.log('??', response.data);
                 }
 
@@ -29,9 +29,10 @@ class AuthService {
             }
         })
     }
-    async checkTokenValid() {
+
+    checkTokenValid() {
         const token = this.getCurrentUser().token;
-        console.log('Checking token:',token)
+        console.log('Checking token:', token)
         return axios
             .post(API_URL + "check", {
                 token: token
@@ -42,10 +43,10 @@ class AuthService {
             }).then(response => {
                 if (response.data) {
                     const a = response.data.success;
-                    console.log('Token valid:',a)
+                    console.log('Token valid:', a)
                     if (!a) {
                         window.location.href = "/signout"
-                    }else {
+                    } else {
                         const username = response.data.username;
                         const roles = response.data.roles;
 
@@ -61,7 +62,7 @@ class AuthService {
 
     changePassword(password: string, oldPassword: string) {
         const token = this.getCurrentUser().token;
-        return axios.post(API_URL + "changepwd" , {
+        return axios.post(API_URL + "changepwd", {
             newPassword: password,
             oldPassword: oldPassword
         }, {
@@ -78,10 +79,12 @@ class AuthService {
         }
         return JSON.parse(json);
     }
+
     isLoggedIn() {
         const user = this.getCurrentUser();
         return user !== null && typeof (user) !== 'undefined';
     }
+
     isAdmin() {
         const user = this.getCurrentUser();
         return user !== null && user.roles.includes("ROLE_ADMIN");

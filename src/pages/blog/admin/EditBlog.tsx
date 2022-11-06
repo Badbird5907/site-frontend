@@ -139,7 +139,7 @@ const EditBlog = (props: any) => {
                 });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.data.error) {
+                if (err.response && err.response.data && err.response.data.error) {
                     Swal.fire({
                         title: 'Error!',
                         text: err.response.data.error,

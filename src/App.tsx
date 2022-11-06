@@ -23,23 +23,28 @@ const App = () => {
         if (user !== null && typeof (user) !== 'undefined') {
             setCurrentUser(user);
             setAdmin(user.roles.includes("ROLE_ADMIN"));
+            console.log('Verifying Token...')
+            /*
             if (!verifyAuth) {
+                console.log('Token is invalid, logging out...')
                 logout()
             }
+             */
+            AuthService.checkTokenValid();
         }
-        console.log('User: ', currentUser);
-        setLoggedIn(AuthService.isLoggedIn());
-        console.log('Logged in: ', loggedIn);
-        if (!loggedIn) {
+        console.log('User: ', user);
+        const l = AuthService.isLoggedIn();
+        console.log('Logged in: ', l);
+        setLoggedIn(l);
+        if (!l) {
             localStorage.removeItem("user"); // Remove user from local storage, sometimes it doesn't get removed if it expires or something
         }
         EasterEggs.bootStrap()
     }, []);
 
     function logout() {
-        AuthService.logout().then(r => {
-            localStorage.removeItem("user");
-        });
+        AuthService.logout();
+        localStorage.removeItem("user");
         window.location.href = '/';
     }
 
@@ -55,15 +60,23 @@ const App = () => {
                         <Route path="/blog/:id" element={<ViewBlog/>}/>
                         {
                             loggedIn ?
-                                <Route path="/admin/blog/:id" element={<EditBlog/>}/>
+                                <>
+                                    <Route path="/admin/blog/:id" element={<EditBlog/>}/>
+                                </>
                                 : null
                         }
+                        <Route path={"/logout"} element={<LogOut/>}/>
+                        <Route path={"/signout"} element={<LogOut/>}/>
                         <Route path={"*"} element={<ErrorPage message="404 Not Found"/>}/>
                     </Routes>
                 </Suspense>
             </BrowserRouter>
         </>
     );
+    function LogOut() {
+        logout();
+        return <div/>
+    }
 };
 
 export default App;
