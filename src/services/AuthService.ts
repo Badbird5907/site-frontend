@@ -23,6 +23,7 @@ class AuthService {
     }
 
     logout() {
+        if (!this.isLoggedIn()) return null;
         return axios.post(API_URL + "logout", {}, {
             headers: {
                 Authorization: "Bearer " + this.getCurrentUser().token

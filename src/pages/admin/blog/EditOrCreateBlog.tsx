@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import BlogAdminService from "../../../services/BlogAdminService";
+import BlogAdminService, {Location} from "../../../services/BlogAdminService";
 import {Button, Fab, FormControl, FormHelperText, Stack, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
@@ -8,13 +8,13 @@ import MDEditor from '@uiw/react-md-editor';
 import SaveIcon from '@mui/icons-material/Save';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
 import TagsList from "./components/TagsList";
-import {Location} from "../../../services/BlogAdminService";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 
-const EditBlog = (props: any) => {
+const EditOrCreateBlog = (props: any) => {
     const params = useParams();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+    const editing = props.editing;
     const id = params.id;
     const [canRender, setCanRender] = useState(false);
     const [data, setData]: any = useState(null);
@@ -35,150 +35,199 @@ const EditBlog = (props: any) => {
     const [customAuthorImg, setCustomAuthorImg] = useState('');
 
     useEffect(() => {
-        BlogAdminService.getMetadata(id as string).then((res) => {
-            console.log('--------------------------------------------')
-            console.log('Data: ', res.data);
-            setTimestamp(moment(res.data.timestamp));
-            setTitle(res.data.title);
-            setDescription(res.data.description);
-            if (res.data.location.contents) {
-                setContent(res.data.location.contents);
-            }
-            if (res.data.location.githubURL) {
-                setURL(res.data.location.githubURL);
-            } else if (res.data.location.directURL) {
-                setURL(res.data.location.directURL);
-            }
-            if (res.data.customAuthor) {
-                setCustomAuthor(res.data.author);
-                if (res.data.authorImg) {
-                    setCustomAuthorImg(res.data.authorImg);
+        if (editing) {
+            BlogAdminService.getMetadata(id as string).then((res) => {
+                console.log('--------------------------------------------')
+                console.log('Data: ', res.data);
+                setTimestamp(moment(res.data.timestamp));
+                setTitle(res.data.title);
+                setDescription(res.data.description);
+                if (res.data.location.contents) {
+                    setContent(res.data.location.contents);
                 }
-            }
-
-            const t = res.data.tags;
-            if (t) {
-                setSelectedTagsFromBlog(t);
-                console.log('Selected tags: ', t);
-            }
-
-            setData(res.data);
-            TagsService.getTags().then((res1) => {
-                console.log('Tags: ', res1.data);
-                // convert icons
-                /*
-                var tagsNewData: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
-                res.data.tags.forEach((tag: any) => {
-                    const id = tag.id;
-                    const name = tag.name;
-                    const description = tag.description;
-                    const iconName = tag.icon;
-                    const icon = ETagIcon.getIconByName(iconName);
-                    tagsNewData.push({
-                        id: id,
-                        name: name,
-                        description: description,
-                        icon: icon
-                    });
-                });
-                setAllTags(tagsNewData);
-                 */
-                setAllTags(res1.data.tags);
-                // Let's sort the tags
-                var selectedTags: any[] = [];
-                var availableTags: any[] = [];
-                var selectedTagIds: any[] = [];
-                t.forEach((tag: any) => {
-                    selectedTagIds.push(tag.id);
-                });
-                res1.data.tags.forEach((tag: any) => {
-                    if (t && selectedTagIds.includes(tag.id)) {
-                        selectedTags.push(tag);
-                    } else {
-                        availableTags.push(tag);
+                if (res.data.location.githubURL) {
+                    setURL(res.data.location.githubURL);
+                } else if (res.data.location.directURL) {
+                    setURL(res.data.location.directURL);
+                }
+                if (res.data.customAuthor) {
+                    setCustomAuthor(res.data.author);
+                    if (res.data.authorImg) {
+                        setCustomAuthorImg(res.data.authorImg);
                     }
+                }
+
+                const t = res.data.tags;
+                if (t) {
+                    setSelectedTagsFromBlog(t)
+                    console.log('Selected tags: ', t);
+                } else fetchTags()
+
+                setData(res.data);
+            }).catch((err) => {
+                console.log('Error: ', err);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'There was an error while fetching the blog metadata. Please try again later.',
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
                 });
-                setSelectedTags(selectedTags);
-                setAvailableTags(availableTags);
-                console.log('new-Selected tags: ', selectedTags);
-                console.log('new-Available tags: ', availableTags);
-                setCanRender(true);
+                setError(true);
+                setCanRender(false)
             });
-        }).catch((err)=> {
-            console.log('Error: ', err);
-            Swal.fire({
-                title: 'Error',
-                text: 'There was an error while fetching the blog metadata. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'Okay'
-            });
-            setError(true);
-            setCanRender(false)
-        });
+        } else {
+            setData({
+                safeName: '',
+                title: '',
+                description: '',
+                timestamp: moment().valueOf(),
+                location: {
+                    githubURL: ''
+                },
+                tags: []
+            })
+            setTimestamp(moment());
+            setTitle('');
+            setDescription('');
+            setURL('');
+            setSelectedTagsFromBlog([])
+            setCanRender(true);
+        }
     }, [])
+
+    useEffect(() => {
+        fetchTags();
+    }, [selectedTagsFromBlog])
 
 
     function save() {
         try {
-            var location: any;
+            let location: any;
             if (url && url !== '') {
                 location = new Location(url);
             } else if (content && content !== '') {
                 location = new Location(content);
             } else location = null;
-            var tags: string[]; // array of tag ids
+            let tags: string[]; // array of tag ids
             if (selectedTags && selectedTags.length > 0) {
                 tags = selectedTags.map((tag: any) => tag.id);
             } else tags = [];
             const timestampNum: number = timestamp.valueOf();
-            BlogAdminService.editBlog(
-                title as string,
-                description as string,
-                location,
-                tags,
-                customAuthor,
-                customAuthorImg,
-                timestampNum,
-                id as string
-            ).then((res) => {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Blog post edited successfully!',
-                    icon: 'success'
-                }).then(() => {
-                    window.location.reload();
+            if (editing) {
+                BlogAdminService.editBlog(
+                    title as string,
+                    description as string,
+                    location,
+                    tags,
+                    customAuthor,
+                    customAuthorImg,
+                    timestampNum,
+                    id as string
+                ).then((res) => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Blog post edited successfully!',
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                }).catch((err) => {
+                    console.error(err);
+                    if (err.response && err.response.data && err.response.data.error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: err.response.data.error,
+                            icon: 'error'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'There was an error editing the blog post!',
+                            icon: 'error'
+                        });
+                    }
                 });
-            }).catch((err) => {
-                console.error(err);
-                if (err.response && err.response.data && err.response.data.error) {
+            } else {
+                BlogAdminService.createBlog(
+                    title as string,
+                    description as string,
+                    location,
+                    tags,
+                    customAuthor,
+                    customAuthorImg,
+                    timestampNum
+                ).then((res) => {
                     Swal.fire({
-                        title: 'Error!',
-                        text: err.response.data.error,
-                        icon: 'error'
+                        title: 'Success!',
+                        text: 'Blog post created successfully!',
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/blog/' + res.data.url;
                     });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'There was an error editing the blog post!',
-                        icon: 'error'
-                    });
-                }
-            });
+                }).catch((err) => {
+                    console.error(err);
+                    if (err.response && err.response.data && err.response.data.error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: err.response.data.error,
+                            icon: 'error'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'There was an error creating the blog post!',
+                            icon: 'error'
+                        });
+                    }
+                });
+            }
         } catch (e) {
             enqueueSnackbar('Error: ' + e, {variant: 'error'});
         }
+    }
+
+    function fetchTags() {
+        let t = selectedTagsFromBlog;
+        if (!t) t = [];
+        TagsService.getTags().then((res1) => {
+            console.log('Tags: ', res1.data);
+            setAllTags(res1.data.tags);
+            // Let's sort the tags
+            var selectedTags: any[] = [];
+            var availableTags: any[] = [];
+            var selectedTagIds: any[] = [];
+            t.forEach((tag: any) => {
+                selectedTagIds.push(tag.id);
+            });
+            res1.data.tags.forEach((tag: any) => {
+                if (t && selectedTagIds.includes(tag.id)) {
+                    selectedTags.push(tag);
+                } else {
+                    availableTags.push(tag);
+                }
+            });
+            setSelectedTags(selectedTags);
+            setAvailableTags(availableTags);
+            console.log('new-Selected tags: ', selectedTags);
+            console.log('new-Available tags: ', availableTags);
+            setCanRender(true);
+        });
+    }
+
+    function canSaveNew() {
+        return title && title !== '' && description && description !== '' && ((url && url !== '') || (content && content !== ''));
     }
 
     // @ts-ignore
     return (
         <div className={"centered"}>
             <h1>Edit blog</h1>
-            <span><b>ID: &nbsp;</b> {id}</span>
+            {editing ? <span><b>ID: &nbsp;</b> {id}</span> : null}
             {error ? <h3>Error!</h3> : null}
             {canRender ?
                 <>
                     <br/>
-                    <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button>
+                    {editing ? <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
                     <br/>
                     <FormControl>
                         {/* TODO: I'm hardcoding this with stack, too tired to mess with grid again */}
@@ -216,12 +265,16 @@ const EditBlog = (props: any) => {
                                     value={content}
                                     onChange={setContent}
                                 />
+                                {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
+                                */}
                             </div>
                             <div id={"url"}>
                                 <TextField id="url" label={"URL"} variant={"outlined"}
                                            defaultValue={url} sx={{
                                     width: '100%'
+                                }} onChange={(newValue) => {
+                                    setURL(newValue.target.value);
                                 }}/>
                                 <FormHelperText id="description-helper-text">Direct URL to markdown
                                     file</FormHelperText>
@@ -279,9 +332,10 @@ const EditBlog = (props: any) => {
                             </div>
                         </Stack>
                     </FormControl>
-                    <Fab color="primary" aria-label="add" disabled={!allTags || !data} onClick={() => {
-                        save()
-                    }} sx={{
+                    <Fab color="primary" aria-label="add" disabled={(editing ? (!allTags || !data) : !canSaveNew())}
+                         onClick={() => {
+                             save()
+                         }} sx={{
                         position: 'fixed',
                         bottom: 16,
                         right: 16,
@@ -294,4 +348,4 @@ const EditBlog = (props: any) => {
 
 };
 
-export default EditBlog;
+export default EditOrCreateBlog;

@@ -28,7 +28,7 @@ class BlogAdminService {
             data['customAuthorImg'] = customAuthorImg;
         }
         if (location.contents) {
-            data['location'] = location.contents;
+            data['content'] = location.contents;
         }
         if (location.directURL) {
             data['directURL'] = location.directURL;
@@ -39,7 +39,7 @@ class BlogAdminService {
         if (timestamp != -1) {
             data['timestamp'] = timestamp;
         }
-
+        console.log('sending data: ', data);
         return axios.post(API_URL + 'create/', data, addAuthHeaders());
     }
 

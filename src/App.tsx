@@ -5,7 +5,7 @@ import Blogs from "./pages/blog/Blogs";
 import ViewBlog from "./pages/blog/ViewBlog";
 import AuthService from "./services/AuthService";
 import verifyAuth from "./services/auth-verify";
-import EditBlog from "./pages/blog/admin/EditBlog";
+import EditOrCreateBlog from "./pages/admin/blog/EditOrCreateBlog";
 import EasterEggs from "./services/EasterEggs";
 
 const MainPage = lazy(() => import("./pages/main/Main"));
@@ -61,8 +61,8 @@ const App = () => {
                         {
                             loggedIn ?
                                 <>
-                                    <Route path="/admin/blog/:id" element={<EditBlog/>}/>
-                                    <Route path="/admin/blog/create" element={<MainPage/>}/>
+                                    <Route path="/admin/blog/:id" element={<EditOrCreateBlog editing={true}/>}/>
+                                    <Route path="/admin/blog/create" element={<EditOrCreateBlog editing={false}/>}/>
                                 </>
                                 : null
                         }
