@@ -73,6 +73,19 @@ const ViewBlog = (props: any) => {
             <div className="centered">
                 <h1>Error!</h1>
                 {ghUrl ? <h2>{ghUrl}</h2> : null}
+                {
+                    AuthService.isLoggedIn() && data && data.id ? (
+                        <Fab color="primary" aria-label="add" onClick={() => {
+                            window.location.href = "/admin/blog/" + data.id;
+                        }} sx={{
+                            position: 'fixed',
+                            bottom: 16,
+                            right: 16,
+                        }}>
+                            <EditIcon/>
+                        </Fab>
+                    ) : null
+                }
             </div>
         )
     }

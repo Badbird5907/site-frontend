@@ -70,4 +70,8 @@ export class ETagIcon {
                 return ETagIcon.NONE;
         }
     }
+
+    public static getAllIcons(): ETagIcon[] {
+        return [ETagIcon.FOLDER, ETagIcon.FILE, ETagIcon.CODE, ETagIcon.BOOK];
+    }
 }

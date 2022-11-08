@@ -13,6 +13,7 @@ const MainPage = lazy(() => import("./pages/main/Main"));
 //const ViewBlog = lazy(() => import("./pages/blog/ViewBlog"));
 const ErrorPage = lazy(() => import("./pages/error"));
 const Loginpage = lazy(() => import("./pages/admin/LoginPage"));
+const TagsPage = lazy(() => import("./pages/admin/tags/TagsPage"));
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
@@ -70,6 +71,7 @@ const App = () => {
                                 <>
                                     <Route path="/admin/blog/:id" element={<EditOrCreateBlog editing={true}/>}/>
                                     <Route path="/admin/blog/create" element={<EditOrCreateBlog editing={false}/>}/>
+                                    <Route path="/admin/tags/" element={<TagsPage/>}/>
                                 </>
                                 : null
                         }
