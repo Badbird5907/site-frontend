@@ -34,6 +34,8 @@ const EditOrCreateBlog = (props: any) => {
     const [customAuthor, setCustomAuthor] = useState('');
     const [customAuthorImg, setCustomAuthorImg] = useState('');
 
+    const [canRenderTags, setCanRenderTags] = useState(false);
+
     useEffect(() => {
         if (editing) {
             BlogAdminService.getMetadata(id as string).then((res) => {
@@ -213,6 +215,9 @@ const EditOrCreateBlog = (props: any) => {
             console.log('new-Selected tags: ', selectedTags);
             console.log('new-Available tags: ', availableTags);
             setCanRender(true);
+            setTimeout(()=> {
+                setCanRenderTags(true)
+            }, 1000) // This is to fix race condition
         });
     }
 
@@ -226,7 +231,7 @@ const EditOrCreateBlog = (props: any) => {
             <h1>Edit blog</h1>
             {editing ? <span><b>ID: &nbsp;</b> {id}</span> : null}
             {error ? <h3>Error!</h3> : null}
-            {canRender && data ?
+            {canRender && data && allTags ?
                 <>
                     <br/>
                     {editing ? <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
@@ -283,7 +288,7 @@ const EditOrCreateBlog = (props: any) => {
                             </div>
                             <div id={"tags"}>
                                 {
-                                    allTags ? <TagsList onListChange={
+                                    canRenderTags ? <TagsList onListChange={
                                         /* @ts-ignore */
                                         (right, left) => {
                                             console.log('right: ', right);
@@ -291,7 +296,7 @@ const EditOrCreateBlog = (props: any) => {
 
                                             // right and left are arrays of tag names, we need to map them back
                                             // to the tag objects
-                                            var rightTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
+                                            let rightTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
                                             right.forEach((tag: any) => {
                                                 allTags.forEach((tagObj: any) => {
                                                     if (tagObj.name === tag) {
