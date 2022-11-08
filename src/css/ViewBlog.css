@@ -21,7 +21,7 @@
     line-height: 1.1;
 }
 .tag {
-    color: white; !important;
+    color: white !important;
 }
 .edit-button {
     /* Stick it to the bottom right so it stays there even when scrolling*/

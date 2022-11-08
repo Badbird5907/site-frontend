@@ -16,5 +16,5 @@ article {
     background-color: #2d2d37;
 }
 .inner {
-    word-wrap: break-word; !important;
+    word-wrap: break-word !important;
 }

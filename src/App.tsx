@@ -4,10 +4,10 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Blogs from "./pages/blog/Blogs";
 import ViewBlog from "./pages/blog/ViewBlog";
 import AuthService from "./services/AuthService";
-import verifyAuth from "./services/auth-verify";
 import EditOrCreateBlog from "./pages/admin/blog/EditOrCreateBlog";
 import EasterEggs from "./services/EasterEggs";
 
+const AdminDrawer = lazy(() => import("./components/admin/AdminDrawer"));
 const MainPage = lazy(() => import("./pages/main/Main"));
 //const Blog = lazy(() => import("./pages/blog/Blog"));
 //const ViewBlog = lazy(() => import("./pages/blog/ViewBlog"));
@@ -50,6 +50,13 @@ const App = () => {
 
     return (
         <>
+            {
+                loggedIn ?
+                    <Suspense fallback={<></>}>
+                        <AdminDrawer/>
+                    </Suspense>
+                    : null
+            }
             <BrowserRouter>
                 <Suspense fallback={<div>Loading...</div>}>
                     <Routes>
@@ -74,6 +81,7 @@ const App = () => {
             </BrowserRouter>
         </>
     );
+
     function LogOut() {
         logout();
         return <div/>

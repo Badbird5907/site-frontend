@@ -63,6 +63,8 @@ const EditOrCreateBlog = (props: any) => {
                     console.log('Selected tags: ', t);
                 } else fetchTags()
 
+                console.log('Data: ', res.data);
+
                 setData(res.data);
             }).catch((err) => {
                 console.log('Error: ', err);
@@ -193,9 +195,9 @@ const EditOrCreateBlog = (props: any) => {
             console.log('Tags: ', res1.data);
             setAllTags(res1.data.tags);
             // Let's sort the tags
-            var selectedTags: any[] = [];
-            var availableTags: any[] = [];
-            var selectedTagIds: any[] = [];
+            let selectedTags: any[] = [];
+            let availableTags: any[] = [];
+            let selectedTagIds: any[] = [];
             t.forEach((tag: any) => {
                 selectedTagIds.push(tag.id);
             });
@@ -224,7 +226,7 @@ const EditOrCreateBlog = (props: any) => {
             <h1>Edit blog</h1>
             {editing ? <span><b>ID: &nbsp;</b> {id}</span> : null}
             {error ? <h3>Error!</h3> : null}
-            {canRender ?
+            {canRender && data ?
                 <>
                     <br/>
                     {editing ? <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
@@ -280,36 +282,37 @@ const EditOrCreateBlog = (props: any) => {
                                     file</FormHelperText>
                             </div>
                             <div id={"tags"}>
-                                <TagsList onListChange={
-                                    /* @ts-ignore */
-                                    (right, left) => {
-                                        console.log('right: ', right);
-                                        console.log('left: ', left);
+                                {
+                                    allTags ? <TagsList onListChange={
+                                        /* @ts-ignore */
+                                        (right, left) => {
+                                            console.log('right: ', right);
+                                            console.log('left: ', left);
 
-                                        // right and left are arrays of tag names, we need to map them back
-                                        // to the tag objects
-                                        var rightTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
-                                        right.forEach((tag: any) => {
-                                            allTags.forEach((tagObj: any) => {
-                                                if (tagObj.name === tag) {
-                                                    rightTags.push(tagObj);
-                                                }
+                                            // right and left are arrays of tag names, we need to map them back
+                                            // to the tag objects
+                                            var rightTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
+                                            right.forEach((tag: any) => {
+                                                allTags.forEach((tagObj: any) => {
+                                                    if (tagObj.name === tag) {
+                                                        rightTags.push(tagObj);
+                                                    }
+                                                });
                                             });
-                                        });
-                                        var leftTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
-                                        left.forEach((tag: any) => {
-                                            allTags.forEach((tagObj: any) => {
-                                                if (tagObj.name === tag) {
-                                                    leftTags.push(tagObj);
-                                                }
+                                            let leftTags: { id: any; name: any; description: any; icon: ETagIcon; }[] = [];
+                                            left.forEach((tag: any) => {
+                                                allTags.forEach((tagObj: any) => {
+                                                    if (tagObj.name === tag) {
+                                                        leftTags.push(tagObj);
+                                                    }
+                                                });
                                             });
-                                        });
 
-                                        setSelectedTags(rightTags);
-                                        setAvailableTags(leftTags);
+                                            setSelectedTags(rightTags);
+                                            setAvailableTags(leftTags);
 
-                                    }}
-                                          selectedTags={selectedTags} availableTags={availableTags}/>
+                                        }} selectedTags={selectedTags} availableTags={availableTags}/> : null
+                                }
                             </div>
                             <div id={"author"}>
                                 <TextField id="author" sx={{

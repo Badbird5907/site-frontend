@@ -86,6 +86,14 @@ export default function TagsList(props: any) {
             setRight(selectedTags.map((tag: any) => tag.name));
     }, []);
 
+    useEffect(()=> {
+        console.log('Left changed: ', left);
+    }, [left])
+
+    useEffect(()=> {
+        console.log('Right changed: ', right);
+    }, [right]);
+
     const customList = (title: React.ReactNode, items: readonly number[]) => (
         <Card>
             <CardHeader
