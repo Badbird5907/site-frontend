@@ -46,9 +46,9 @@ const list = () => (
 );
 
 useEffect(()=> {
-    // add keypress listener for the 'x' key, and call toggleDrawer when it's pressed and only if the user is not typing in an input
+    // add keypress listener for the 'q + ctrl' key, and call toggleDrawer when it's pressed and only if the user is not typing in an input
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'x' &&
+        if (e.key === 'q' && e.ctrlKey &&
             !(e.target instanceof HTMLInputElement) &&
             !(e.target instanceof HTMLTextAreaElement) &&
             !(e.target instanceof HTMLSelectElement) &&
