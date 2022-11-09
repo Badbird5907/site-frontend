@@ -105,6 +105,7 @@ function Blogs() {
         }
     }
 
+
     return (
         <div className={"app"}>
             <Container fixed>

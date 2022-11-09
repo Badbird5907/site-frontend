@@ -1,17 +1,41 @@
 import React, {useEffect} from 'react';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
-import {DataGrid, GridCellEditStopParams, GridRowModel, MuiEvent} from "@mui/x-data-grid";
-import {Button} from "@mui/material";
+import {
+    Button, Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Fab,
+    MenuItem,
+    Select,
+    TextField
+} from "@mui/material";
 import Swal from "sweetalert2";
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import {GridCellEditCommitParams} from "@mui/x-data-grid/models/params";
-import {MuiBaseEvent} from "@mui/x-data-grid/models/muiEvent";
-import {GridRowId} from "@mui/x-data-grid/models/gridRows";
+import {Theme, useTheme} from "@mui/material/styles";
+import {DataGrid, GridCellEditCommitParams, MuiBaseEvent} from "@mui/x-data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const TagsPage = () => {
     const [data, setData] = React.useState([]);
     const [canRender, setCanRender] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [newTagName, setNewTagName] = React.useState("");
+    const [newTagIcon, setNewTagIcon] = React.useState(ETagIcon.NONE);
+    const [newTagDescription, setNewTagDescription] = React.useState("");
 
     useEffect(() => {
         update()
@@ -112,19 +136,121 @@ const TagsPage = () => {
                                 }
                             });
                         }}><DeleteIcon/></Button>
-                        <Button variant="contained" onClick={() => {
-
-                        }}><EditIcon/></Button>
                     </>
                 )
             }
         }
     ]
 
+
+    function getStyles(theme: Theme) {
+        return {
+            fontWeight:
+            theme.typography.fontWeightRegular
+        };
+    }
+
+    const theme = useTheme();
+
     return (
         <div>
             <h1 className={"centered border-bottom"}>Tags</h1>
             {canRender ? <div className={"centered"} style={{height: '550px', width: '100%'}}>
+
+                <Dialog open={openDialog} onClose={() => {
+                    setOpenDialog(false)
+                }}>
+                    <DialogTitle>Add Tag</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Name"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => {
+                                setNewTagName(e.target.value);
+                            }}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="description"
+                            label="Description"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => {
+                                setNewTagDescription(e.target.value);
+                            }}
+                        />
+
+                        <Select
+                            labelId="select-icon"
+                            id="select-icon-select"
+                            value={newTagIcon}
+                            label="Select Icon"
+                            fullWidth
+                            sx={{
+                                marginTop: "15px"
+                            }}
+                            onChange={(e) => {
+                                setNewTagIcon(e.target.value as ETagIcon);
+                            }}
+                            renderValue={(value: any) => {
+                                const Icon = value.icon;
+                                if (Icon) {
+                                    return (
+                                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                            <Chip key={value.name} label={value.name} icon={<Icon/>}/>
+                                        </Box>
+                                    )
+                                } else {
+                                    return (
+                                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                                            <Chip key={value.name} label={value.name}/>
+                                        </Box>
+                                    )
+                                }
+                            }}
+                        >
+                            {ETagIcon.getAllIcons().map((icon) => {
+                                const Icon = icon.getIcon();
+                                if (Icon) { // @ts-ignore
+                                    return <MenuItem key={icon.getName()}
+                                                     value={icon}
+                                                     style={getStyles(theme)}
+                                    ><Icon/>&nbsp;{icon.getName()}</MenuItem>
+                                } else { // @ts-ignore
+                                    return <MenuItem key={icon.getName()}
+                                                     style={getStyles(theme)}
+                                                     value={icon}>{icon.getName()}</MenuItem>
+                                }
+                            })}
+                        </Select>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => {
+                            setOpenDialog(false);
+                        }}>Cancel</Button>
+                        <Button onClick={() => {
+                            setOpenDialog(false);
+                            TagsService.createIconStr(newTagName, newTagDescription, newTagIcon.name).then((res) => {
+                                Swal.fire(
+                                    'Created!',
+                                    'The tag has been created.',
+                                    'success'
+                                ).then(() => {
+                                    update();
+                                });
+                            });
+                        }}>Create</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <span><b>Click outside the cell twice after editing to commit changes.</b></span>
+                <br/>
                 <DataGrid sx={{
                     width: '90%',
                     height: '90%'
@@ -195,6 +321,15 @@ const TagsPage = () => {
                               console.error('Error updating: ', error);
                           }}
                 />
+                <Fab color="primary" aria-label="add" onClick={() => {
+                    setOpenDialog(true)
+                }} sx={{
+                    position: 'fixed',
+                    bottom: 16,
+                    right: 16,
+                }}>
+                    <AddIcon/>
+                </Fab>
             </div> : null}
         </div>
 

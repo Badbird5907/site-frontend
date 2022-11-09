@@ -1,11 +1,11 @@
 import axios from "axios";
 import {addAuthHeaders, backendURL} from "./APIService";
-
-const API_URL = backendURL + "tags/";
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CodeIcon from '@mui/icons-material/Code';
 import BookIcon from '@mui/icons-material/Book';
+
+const API_URL = backendURL + "tags/";
 
 class TagsService {
     getTags() {
@@ -14,6 +14,10 @@ class TagsService {
 
     create(name: string, description: string, icon: ETagIcon) {
         const iconName = icon.getName();
+        return this.createIconStr(name, description, iconName);
+    }
+
+    createIconStr(name: string, description: string, iconName: string) {
         console.log('Create Tag: ', {name, description, iconName})
         return axios.post(API_URL + 'create/', {
             name,
@@ -62,7 +66,7 @@ export class ETagIcon {
         return this.icon;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
