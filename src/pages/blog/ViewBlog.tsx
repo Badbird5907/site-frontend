@@ -29,6 +29,7 @@ const ViewBlog = (props: any) => {
     const [githubURL, setGithubURL]: any = useState(null);
     const [author, setAuthor]: any = useState(null);
     const [authorImg, setAuthorImg]: any = useState(null);
+    const [errorData, setErrorData]: any = useState(null);
     useEffect(() => {
         axios.get(backendURL + "blog/content/get/" + id).then((res) => {
             console.log(res.data);
@@ -59,6 +60,7 @@ const ViewBlog = (props: any) => {
                 console.log(err);
                 const data = err.response.data;
                 setError(true);
+                setErrorData(data);
                 if (data.githubURL) {
                     setGithubURL(data.githubURL);
                 }
@@ -74,9 +76,9 @@ const ViewBlog = (props: any) => {
                 <h1>Error!</h1>
                 {ghUrl ? <h2>{ghUrl}</h2> : null}
                 {
-                    AuthService.isLoggedIn() && data && data.id ? (
+                    AuthService.isLoggedIn() && errorData && errorData.id ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href = "/admin/blog/" + data.id;
+                            window.location.href = "/admin/blog/" + errorData.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,
