@@ -4,7 +4,7 @@ import axios from "axios";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm'
-import '../../css/ViewBlog.css';
+import '../../../css/ViewBlog.css';
 //@ts-ignore
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore

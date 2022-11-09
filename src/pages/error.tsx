@@ -1,4 +1,4 @@
-import '../css/Error.css'
+import '../../css/Error.css'
 import {Button, Stack} from "@mui/material";
 export default function ErrorPage(props: { message: string }) {
     return (

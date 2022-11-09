@@ -1,23 +1,23 @@
-// @ts-nocheck
-import React from "react";
+import React, {ErrorInfo} from "react";
 
 export default class ErrorBoundary extends React.Component {
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         this.state = {hasError: false};
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(error: any) {
         // Update state so the next render will show the fallback UI.
         return {hasError: true};
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         // You can also log the error to an error reporting service
         console.error(error, errorInfo);
     }
 
     render() {
+        // @ts-ignore
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return (
@@ -31,6 +31,7 @@ export default class ErrorBoundary extends React.Component {
             );
         }
 
+        // @ts-ignore
         return this.props.children;
     }
 }

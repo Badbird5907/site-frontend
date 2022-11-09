@@ -1,19 +1,17 @@
 import React, {lazy, Suspense, useEffect, useState} from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-import Blogs from "./pages/blog/Blogs";
-import ViewBlog from "./pages/blog/ViewBlog";
-import AuthService from "./services/AuthService";
-import EditOrCreateBlog from "./pages/admin/blog/EditOrCreateBlog";
-import EasterEggs from "./services/EasterEggs";
+import Blogs from "../src/pages/blog/Blogs";
+import ViewBlog from "../src/pages/blog/ViewBlog";
+import AuthService from "../src/services/AuthService";
+import EditOrCreateBlog from "../src/pages/admin/blog/EditOrCreateBlog";
+import EasterEggs from "../src/services/EasterEggs";
 
-const AdminDrawer = lazy(() => import("./components/admin/AdminDrawer"));
-const MainPage = lazy(() => import("./pages/main/Main"));
-//const Blog = lazy(() => import("./pages/blog/Blog"));
-//const ViewBlog = lazy(() => import("./pages/blog/ViewBlog"));
-const ErrorPage = lazy(() => import("./pages/error"));
-const Loginpage = lazy(() => import("./pages/admin/LoginPage"));
-const TagsPage = lazy(() => import("./pages/admin/tags/TagsPage"));
+const AdminDrawer = lazy(() => import("../components/admin/AdminDrawer"));
+const MainPage = lazy(() => import("../src/pages/main/Main"));
+const ErrorPage = lazy(() => import("../src/pages/error"));
+const Loginpage = lazy(() => import("../src/pages/admin/LoginPage"));
+const TagsPage = lazy(() => import("../src/pages/admin/tags/TagsPage"));
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());

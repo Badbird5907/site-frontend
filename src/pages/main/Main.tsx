@@ -1,11 +1,11 @@
-import '../../css/App.css'
-import Home from "./components/Home";
+import '../../../css/App.css'
+import App from "../../../pages/App";
 
 function Main() {
     return (
         <div className={"app"}>
             <section id="main">
-                <Home/>
+                <App/>
             </section>
         </div>
     )

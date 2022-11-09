@@ -1,7 +1,7 @@
 import React from 'react';
 import {Avatar, Card, CardActions, CardContent, CardMedia, styled} from "@mui/material";
 import moment from "moment/moment";
-import '../../../css/components/BlogList.css'
+import '../../../../css/components/BlogList.css'
 import AuthService from "../../../services/AuthService";
 
 const BlogList = (props: any) => {

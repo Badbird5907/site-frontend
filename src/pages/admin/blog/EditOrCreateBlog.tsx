@@ -4,12 +4,16 @@ import BlogAdminService, {Location} from "../../../services/BlogAdminService";
 import {Button, Fab, FormControl, FormHelperText, Stack, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
-import MDEditor from '@uiw/react-md-editor';
+//import MDEditor from '@uiw/react-md-editor';
+import MdEditor from 'react-markdown-editor-lite';
+
 import SaveIcon from '@mui/icons-material/Save';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
 import TagsList from "./components/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
+import 'react-markdown-editor-lite/lib/index.css';
+import ReactMarkdown from "react-markdown";
 
 const EditOrCreateBlog = (props: any) => {
     const params = useParams();
@@ -268,13 +272,18 @@ const EditOrCreateBlog = (props: any) => {
                                 </div>
                             </Stack>
                             <div>
-                                <MDEditor
+                                {/*
+                                  <MDEditor
                                     value={content}
                                     onChange={setContent}
                                 />
-                                {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}
+                                <MdEditor style={{ height: '500px' }} renderHTML={(text)=> {
+                                    return <ReactMarkdown children={text} />
+                                }} onChange={({html, text})=> {
+                                    setContent(text);
+                                }} />
                             </div>
                             <div id={"url"}>
                                 <TextField id="url" label={"URL"} variant={"outlined"}
