@@ -33,7 +33,8 @@ const BlogList = (props: any) => {
                                   key={id}
                                   className={"inner"}
                                   onClick={() => {
-                                      window.location.href = "/blog/" + safeName;
+                                      if (typeof window !== 'undefined')
+                                          window.location.href = "/blog/" + safeName;
                                   }}
                             >
 

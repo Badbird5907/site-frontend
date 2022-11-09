@@ -137,7 +137,8 @@ const EditOrCreateBlog = (props: any) => {
                         text: 'Blog post edited successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.reload();
+                        if (typeof window !== 'undefined')
+                            window.location.reload();
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -170,7 +171,8 @@ const EditOrCreateBlog = (props: any) => {
                         text: 'Blog post created successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/blog/' + res.data.url;
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/blog/' + res.data.url;
                     });
                 }).catch((err) => {
                     console.error(err);

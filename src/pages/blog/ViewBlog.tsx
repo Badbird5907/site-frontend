@@ -78,7 +78,8 @@ const ViewBlog = (props: any) => {
                 {
                     AuthService.isLoggedIn() && errorData && errorData.id ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href = "/admin/blog/" + errorData.id;
+                            if (typeof window !== 'undefined')
+                                window.location.href = "/admin/blog/" + errorData.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,
@@ -184,7 +185,8 @@ const ViewBlog = (props: any) => {
                 {
                     AuthService.isLoggedIn() ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href = "/admin/blog/" + data.id;
+                            if (typeof window !== 'undefined')
+                                window.location.href = "/admin/blog/" + data.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,

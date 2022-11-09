@@ -11,10 +11,12 @@ export default function ErrorPage(props: { message: string }) {
             <div className={"centered"}>
                 <Stack spacing={2} direction={"row"}>
                     <Button variant={"contained"} onClick={() => {
-                        window.history.back();
+                        if (typeof window !== 'undefined')
+                            window.history.back();
                     }}>Back</Button>
                     <Button variant={"outlined"} onClick={() => {
-                        window.location.href = "/"
+                        if (typeof window !== 'undefined')
+                            window.location.href = "/"
                     }}>Home</Button>
                 </Stack>
             </div>

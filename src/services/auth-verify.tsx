@@ -36,13 +36,15 @@ class AuthVerify extends Component {
         super(props);
 
         props.history.listen(() => {
-            const user = JSON.parse(localStorage.getItem("user"));
+            if (typeof localStorage !== 'undefined') {
+                const user = JSON.parse(localStorage.getItem("user"));
 
-            if (user) {
-                const decodedJwt = parseJwt(user.token);
+                if (user) {
+                    const decodedJwt = parseJwt(user.token);
 
-                if (decodedJwt.exp * 1000 < Date.now()) {
-                    props.logOut();
+                    if (decodedJwt.exp * 1000 < Date.now()) {
+                        props.logOut();
+                    }
                 }
             }
         });

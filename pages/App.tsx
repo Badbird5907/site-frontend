@@ -36,15 +36,18 @@ const App = () => {
         console.log('Logged in: ', l);
         setLoggedIn(l);
         if (!l) {
-            localStorage.removeItem("user"); // Remove user from local storage, sometimes it doesn't get removed if it expires or something
+            if (typeof localStorage !== 'undefined')
+                localStorage.removeItem("user"); // Remove user from local storage, sometimes it doesn't get removed if it expires or something
         }
         EasterEggs.bootStrap()
     }, []);
 
     function logout() {
         AuthService.logout();
-        localStorage.removeItem("user");
-        window.location.href = '/';
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem("user");
+            window.location.href = '/';
+        }
     }
 
     return (

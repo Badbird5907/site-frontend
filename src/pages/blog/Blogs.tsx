@@ -122,7 +122,8 @@ function Blogs() {
                                 setOrder(val);
                                 updatePage(val);
 
-                                window.location.reload();
+                                if (typeof window !== 'undefined')
+                                    window.location.reload();
                             }}
                         >
                             <MenuItem value={'asc'}>Asc</MenuItem>
@@ -135,15 +136,15 @@ function Blogs() {
                                        setSearch(e.target.value);
                                        updateParam('search', e.target.value);
                                    }}
-                                   onClick={(e)=> {
+                                   onClick={(e) => {
                                        setInfoPopoverOpen(true)
                                    }}
                         />
                         <Popover
                             id={'info-popover'}
                             open={infoPopoverOpen}
-                            anchorEl={document.getElementById('search')}
-                            onClose={(e)=> {
+                            anchorEl={typeof document !== 'undefined' ? document.getElementById('search') : null}
+                            onClose={(e) => {
                                 setInfoPopoverOpen(false);
                             }}
                             anchorOrigin={{
@@ -153,9 +154,11 @@ function Blogs() {
                             disableAutoFocus={true}
                             disableEnforceFocus={true}
                         >
-                            <Typography sx={{ p: 2 }}>Search is currently very buggy.<br/>The code can be found <a target={"_blank"} href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
+                            <Typography sx={{p: 2}}>Search is currently very buggy.<br/>The code can be found <a
+                                target={"_blank"}
+                                href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
                         </Popover>
-                        <TagFilter tags={allTags} onChange={(event: any)=> {
+                        <TagFilter tags={allTags} onChange={(event: any) => {
                             console.log('change: ', {event})
                             // event is a array of tags
                             setSelectedTags(event);
@@ -186,7 +189,8 @@ function Blogs() {
             {
                 AuthService.isLoggedIn() ? (
                     <Fab color="primary" aria-label="add" onClick={() => {
-                        window.location.href = '/admin/blog/create';
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/admin/blog/create';
                     }} sx={{
                         position: 'fixed',
                         bottom: 16,

@@ -29,7 +29,8 @@ const LoginPage = () => {
                     autoHideDuration: 2500,
                 });
                 setTimeout(() => {
-                    window.location.href = "/";
+                    if (typeof window !== 'undefined')
+                        window.location.href = "/";
                 }, 500);
             },
             error => {
