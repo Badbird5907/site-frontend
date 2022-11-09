@@ -37,7 +37,8 @@
     "remark-gfm": "^3.0.1",
     "sort-by": "^1.2.0",
     "sweetalert2": "^11.6.5",
-    "typewriter-effect": "^2.19.0"
+    "typewriter-effect": "^2.19.0",
+    "vite-plugin-ssr": "^0.4.47"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
