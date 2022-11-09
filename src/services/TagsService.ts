@@ -1,5 +1,6 @@
 import axios from "axios";
-import {backendURL} from "./APIService";
+import {addAuthHeaders, backendURL} from "./APIService";
+
 const API_URL = backendURL + "tags/";
 import FolderIcon from '@mui/icons-material/Folder';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -8,8 +9,9 @@ import BookIcon from '@mui/icons-material/Book';
 
 class TagsService {
     getTags() {
-        return axios.get(API_URL + 'get/');
+        return axios.get(API_URL + 'get/', addAuthHeaders());
     }
+
     create(name: string, description: string, icon: ETagIcon) {
         const iconName = icon.getName();
         console.log('Create Tag: ', {name, description, iconName})
@@ -17,25 +19,33 @@ class TagsService {
             name,
             description,
             icon: iconName
-        });
+        }, addAuthHeaders());
     }
+
     edit(id: string, name: string, description: string, icon: ETagIcon) {
         const iconName = icon.getName();
+        return this.editIconStr(id, name, description, iconName);
+    }
+
+    editIconStr(id: string, name: string, description: string, iconName: string) {
         console.log('Edit Tag: ', {id, name, description, iconName})
         return axios.post(API_URL + 'edit/', {
             id,
             name,
             description,
             icon: iconName
-        });
+        }, addAuthHeaders());
     }
+
     delete(id: string) {
         return axios.post(API_URL + 'delete/', {
             id
-        });
+        }, addAuthHeaders());
     }
 }
+
 export default new TagsService();
+
 export class ETagIcon {
     static FOLDER = new ETagIcon(FolderIcon, 'FOLDER');
     static FILE = new ETagIcon(InsertDriveFileIcon, 'FILE');
@@ -72,6 +82,6 @@ export class ETagIcon {
     }
 
     public static getAllIcons(): ETagIcon[] {
-        return [ETagIcon.FOLDER, ETagIcon.FILE, ETagIcon.CODE, ETagIcon.BOOK];
+        return [ETagIcon.FOLDER, ETagIcon.FILE, ETagIcon.CODE, ETagIcon.BOOK, ETagIcon.NONE];
     }
 }
