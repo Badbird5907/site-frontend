@@ -8,6 +8,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {useEffect} from "react";
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import BookIcon from '@mui/icons-material/Book';
 
 export default function SwipeableTemporaryDrawer() {
     const [state, setState] = React.useState(false);
@@ -39,6 +40,12 @@ const list = () => (
                 <ListItemButton href={"/admin/tags"}>
                     <ListItemIcon><LocalOfferIcon/></ListItemIcon>
                     <ListItemText primary={'Tags'}/>
+                </ListItemButton>
+            </ListItem>
+            <ListItem key={'blogsIcon'} disablePadding>
+                <ListItemButton href={"/blogs"}>
+                    <ListItemIcon><BookIcon/></ListItemIcon>
+                    <ListItemText primary={'Blogs'}/>
                 </ListItemButton>
             </ListItem>
         </List>
