@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useSnackbar} from 'notistack';
 
-const LoginPage = () => {
+const Index = () => {
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -29,7 +29,8 @@ const LoginPage = () => {
                     autoHideDuration: 2500,
                 });
                 setTimeout(() => {
-                    window.location.href = "/";
+                    if (typeof window !== 'undefined')
+                        window.location.href = "/";
                 }, 500);
             },
             error => {
@@ -103,4 +104,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Index;

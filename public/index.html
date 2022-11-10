@@ -17,11 +17,12 @@
 
             function animate() {
                 // remove current favicon
-                if (document.querySelector("link[rel='icon']") !== null)
-                    document.querySelector("link[rel='icon']").remove();
-                if (document.querySelector("link[rel='shortcut icon']") !== null)
-                    document.querySelector("link[rel='shortcut icon']").remove();
-
+                if (typeof document !== 'undefined') {
+                    if (document.querySelector("link[rel='icon']") !== null)
+                        document.querySelector("link[rel='icon']").remove();
+                    if (document.querySelector("link[rel='shortcut icon']") !== null)
+                        document.querySelector("link[rel='shortcut icon']").remove();
+                }
                 // add new favicon
                 const newURL = baseURL + currentFrame + extension;
                 document.querySelector("head").insertAdjacentHTML('beforeend', '<link rel="icon" href="' + newURL + '" type="image/png">');

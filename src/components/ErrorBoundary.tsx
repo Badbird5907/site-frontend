@@ -25,7 +25,8 @@ export default class ErrorBoundary extends React.Component {
                     <h1>Something went wrong</h1>
                     <h2>While rendering this page/component</h2>
                     <h3>Please try to <a href={''} onClick={() => {
-                        window.location.reload()
+                        if (typeof window !== 'undefined')
+                            window.location.reload()
                     }}>reload</a> this page, or try again later.</h3>
                 </>
             );

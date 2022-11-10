@@ -1,27 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm'
-import '../../css/ViewBlog.css';
 //@ts-ignore
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore
 //import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import GHColorsPrism from "../../utils/GHColors.prism";
-import {Avatar, Button, Chip, Container, Fab, Stack} from "@mui/material";
+import GHColorsPrism from "../../../utils/GHColors.prism";
+import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
-import {backendURL} from "../../services/APIService";
-import Box from "@mui/material/Box";
+import {backendURL} from '../../../services/APIService';
 import EditIcon from '@mui/icons-material/Edit';
-import AuthService from "../../services/AuthService";
-import {ETagIcon} from "../../services/TagsService";
+import AuthService from "../../../services/AuthService";
+import {ETagIcon} from "../../../services/TagsService";
+import {useRouter} from "next/router";
 
 const ViewBlog = (props: any) => {
-    const params = useParams();
-    const id = params.id;
+    const router = useRouter();
+    const {id} = router.query;
+
     const [data, setData]: any = useState(null);
     const [timestamp, setTimestamp]: any = useState(null);
     const [tags, setTags]: any = useState([]);
@@ -31,6 +30,20 @@ const ViewBlog = (props: any) => {
     const [authorImg, setAuthorImg]: any = useState(null);
     const [errorData, setErrorData]: any = useState(null);
     useEffect(() => {
+        // get current url
+        if (typeof window !== 'undefined') {
+            /*
+            const url = window.location.href;
+            // get the last part of the url
+            const urlParts = url.split('/');
+            const lastPart = urlParts[urlParts.length - 1];
+            setId(lastPart); // Fuckin next.js won't work
+             */
+        }
+    }, [])
+    useEffect(() => {
+        if (id == null) return;
+        console.log("Fetching blog data with id: " + id);
         axios.get(backendURL + "blog/content/get/" + id).then((res) => {
             console.log(res.data);
             if (res.data.githubURL) {
@@ -65,7 +78,7 @@ const ViewBlog = (props: any) => {
                     setGithubURL(data.githubURL);
                 }
             });
-    }, [])
+    }, [id])
     if (error) {
         var ghUrl = null;
         if (githubURL) {
@@ -78,7 +91,8 @@ const ViewBlog = (props: any) => {
                 {
                     AuthService.isLoggedIn() && errorData && errorData.id ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href = "/admin/blog/" + errorData.id;
+                            if (typeof window !== 'undefined')
+                                window.location.href = "/admin/blog/" + errorData.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,
@@ -141,7 +155,7 @@ const ViewBlog = (props: any) => {
                                     variant="outlined"
                                 />
                                 <Chip
-                                    avatar={<Avatar alt={author} src={authorImg} />}
+                                    avatar={<Avatar alt={author} src={authorImg}/>}
                                     label={author}
                                     variant="outlined"
                                 />
@@ -184,7 +198,8 @@ const ViewBlog = (props: any) => {
                 {
                     AuthService.isLoggedIn() ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
-                            window.location.href = "/admin/blog/" + data.id;
+                            if (typeof window !== 'undefined')
+                                window.location.href = "/admin/blog/" + data.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,

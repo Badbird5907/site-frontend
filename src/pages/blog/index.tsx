@@ -3,8 +3,8 @@ import BlogService from "../../services/BlogService";
 import BlogList from "./components/BlogList";
 import {
     Button,
-    Container, Fab,
-    InputLabel,
+    Container,
+    Fab,
     MenuItem,
     Pagination,
     Popover,
@@ -13,25 +13,27 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {useSearchParams} from "react-router-dom";
 import TagsService from "../../services/TagsService";
 import TagFilter from "./components/TagFilter";
 import AuthService from "../../services/AuthService";
 import AddIcon from "@mui/icons-material/Add";
+import {useRouter} from "next/router";
 
-function Blogs() {
+function Index() {
+    const disableSearch = true; // next js broke it
+
     const [data, setData] = useState(null);
     const [fetched, setFetched] = useState(false);
     const [error, setError] = useState(false);
     const [blogs, setBlogs] = useState(null);
     const [noBlogs, setNoBlogs] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useState(useRouter().query.toString());
     const [totalPages, setTotalPages] = useState(1);
-    const [order, setOrder] = useState(searchParams.get("order") || "asc"); // FIXME not working well, page currently being reloaded as a workaround
-    const [search, setSearch] = useState(searchParams.get("search") || "");
+    const [order, setOrder] = useState('asc'); // FIXME not working well, page currently being reloaded as a workaround
+    const [search, setSearch] = useState("");
     const [allTags, setAllTags] = useState([]);
-    const [selectedTags, setSelectedTags] = useState(searchParams.getAll("tags") || []);
+    const [selectedTags, setSelectedTags] = useState([]);
 
     const [page, setPage] = useState(1);
     const [defaultPage, setDefaultPage] = useState(1);
@@ -47,9 +49,19 @@ function Blogs() {
 
     useEffect(() => {
         updatePage()
-    }, [page])
+    }, [])
 
     useEffect(() => {
+        if (searchParams !== undefined) {
+            if (disableSearch) return;
+            // @ts-ignore - It can't be undefined
+            setOrder(searchParams.get("order") || "asc")
+            // @ts-ignore - It can't be undefined
+            setSearch(searchParams.get("search") || "")
+            // @ts-ignore - It can't be undefined
+            setSelectedTags(searchParams.getAll("tags") || [])
+        }
+
         TagsService.getTags().then((res) => {
             setAllTags(res.data.tags);
         })
@@ -92,13 +104,18 @@ function Blogs() {
     }
 
     const updateParam = (key: string, value: any) => {
+        if (disableSearch) return;
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set(key, value);
+        // @ts-ignore - It can't be undefined
         setSearchParams(currentParams);
     }
 
     function getOrDefaultParam(param: string, defaultValue: any): any {
+        if (disableSearch) return defaultValue;
+        // @ts-ignore - It can't be undefined
         if (searchParams.has(param)) {
+            // @ts-ignore - It can't be undefined
             return searchParams.get(param);
         } else {
             return defaultValue;
@@ -107,11 +124,14 @@ function Blogs() {
 
 
     return (
-        <div className={"app"}>
+        <div>
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
                 <Stack direction={"column"} spacing={2}>
-                    <Stack direction="row" className={"centered"} spacing={2}>
+                    {disableSearch ? <span className={'centered'}>Search is currently disabled.</span> :  <Stack direction="row" sx={{
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }} spacing={2}>
                         <Select
                             id="order-select"
                             value={order}
@@ -122,7 +142,8 @@ function Blogs() {
                                 setOrder(val);
                                 updatePage(val);
 
-                                window.location.reload();
+                                if (typeof window !== 'undefined')
+                                    window.location.reload();
                             }}
                         >
                             <MenuItem value={'asc'}>Asc</MenuItem>
@@ -135,15 +156,15 @@ function Blogs() {
                                        setSearch(e.target.value);
                                        updateParam('search', e.target.value);
                                    }}
-                                   onClick={(e)=> {
+                                   onClick={(e) => {
                                        setInfoPopoverOpen(true)
                                    }}
                         />
                         <Popover
                             id={'info-popover'}
                             open={infoPopoverOpen}
-                            anchorEl={document.getElementById('search')}
-                            onClose={(e)=> {
+                            anchorEl={typeof document !== 'undefined' ? document.getElementById('search') : null}
+                            onClose={(e) => {
                                 setInfoPopoverOpen(false);
                             }}
                             anchorOrigin={{
@@ -153,9 +174,11 @@ function Blogs() {
                             disableAutoFocus={true}
                             disableEnforceFocus={true}
                         >
-                            <Typography sx={{ p: 2 }}>Search is currently very buggy.<br/>The code can be found <a target={"_blank"} href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
+                            <Typography sx={{p: 2}}>Search is currently very buggy.<br/>The code can be found <a
+                                target={"_blank"}
+                                href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
                         </Popover>
-                        <TagFilter tags={allTags} onChange={(event: any)=> {
+                        <TagFilter tags={allTags} onChange={(event: any) => {
                             console.log('change: ', {event})
                             // event is a array of tags
                             setSelectedTags(event);
@@ -164,7 +187,7 @@ function Blogs() {
                         <Button variant={"contained"} onClick={() => {
                             updatePage();
                         }}>Search</Button>
-                    </Stack>
+                    </Stack>}
                     {error ? <h2 className={"centered"}>Error fetching blog posts!</h2> : null}
                     {fetched ?
                         noBlogs ? <h2 className={"centered"}>No blog posts found!</h2> :
@@ -186,7 +209,8 @@ function Blogs() {
             {
                 AuthService.isLoggedIn() ? (
                     <Fab color="primary" aria-label="add" onClick={() => {
-                        window.location.href = '/admin/blog/create';
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/admin/blog/create';
                     }} sx={{
                         position: 'fixed',
                         bottom: 16,
@@ -200,4 +224,4 @@ function Blogs() {
     )
 }
 
-export default Blogs
+export default Index

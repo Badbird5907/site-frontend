@@ -1,7 +1,7 @@
 import React from 'react';
 import {Avatar, Card, CardActions, CardContent, CardMedia, styled} from "@mui/material";
 import moment from "moment/moment";
-import '../../../css/components/BlogList.css'
+import styles from '../../../styles/components/BlogList.module.css'
 import AuthService from "../../../services/AuthService";
 
 const BlogList = (props: any) => {
@@ -11,7 +11,7 @@ const BlogList = (props: any) => {
     if (data) {
         console.log('Data', data);
         return (
-            <div className={"row"}>
+            <div className={styles.row}>
                 {data.map((item: any) => {
                     const id: string = item.id;
                     const title: string = item.title;
@@ -24,16 +24,17 @@ const BlogList = (props: any) => {
                     const description: string = item.description;
                     const date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
                     return (
-                        <article key={id}>
+                        <article className={'card'} key={id}>
                             <Card variant={'outlined'}
                                   sx={{
                                       backgroundColor: '#1e1e1e',
                                       cursor: 'pointer'
                                   }}
                                   key={id}
-                                  className={"inner"}
+                                  className={styles.inner}
                                   onClick={() => {
-                                      window.location.href = "/blog/" + safeName;
+                                      if (typeof window !== 'undefined')
+                                          window.location.href = "/blog/view/" + safeName;
                                   }}
                             >
 

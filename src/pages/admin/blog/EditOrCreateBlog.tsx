@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
 import BlogAdminService, {Location} from "../../../services/BlogAdminService";
 import {Button, Fab, FormControl, FormHelperText, Stack, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
-import MDEditor from '@uiw/react-md-editor';
 import SaveIcon from '@mui/icons-material/Save';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
 import TagsList from "./components/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import dynamic from "next/dynamic";
+
+const MDEditor = dynamic(
+    () => import("@uiw/react-md-editor").then((mod) => mod.default),
+    { ssr: false }
+);
 const EditOrCreateBlog = (props: any) => {
-    const params = useParams();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const editing = props.editing;
-    const id = params.id;
+    const id = props.id;
     const [canRender, setCanRender] = useState(false);
     const [data, setData]: any = useState(null);
     const [timestamp, setTimestamp]: any = useState(null);
@@ -133,7 +138,8 @@ const EditOrCreateBlog = (props: any) => {
                         text: 'Blog post edited successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.reload();
+                        if (typeof window !== 'undefined')
+                            window.location.reload();
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -166,7 +172,8 @@ const EditOrCreateBlog = (props: any) => {
                         text: 'Blog post created successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/blog/' + res.data.url;
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/blog/view/' + res.data.url;
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -234,7 +241,7 @@ const EditOrCreateBlog = (props: any) => {
             {canRender && data && allTags ?
                 <>
                     <br/>
-                    {editing ? <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
+                    {editing ? <Button href={"/blog/view/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
                     <br/>
                     <FormControl>
                         {/* TODO: I'm hardcoding this with stack, too tired to mess with grid again */}
