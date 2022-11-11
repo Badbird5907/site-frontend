@@ -62,7 +62,7 @@ export default function TagFilter(props: any) {
                     input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
                     renderValue={(selected) => (
                         <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                            {selected !== undefined && selected.map((tagName: string) => {
+                            {selected && selected.map((tagName: string) => {
                                 const tag = tags.find((tag: any) => tag.name === tagName);
                                 //console.log('selected tag ', tag)
                                 const id = tag.id;
@@ -84,7 +84,7 @@ export default function TagFilter(props: any) {
                     )}
                     MenuProps={MenuProps}
                 >
-                    {tags.map((tag: any) => {
+                    {tags && tags.map((tag: any) => {
                         const id = tag.id;
                         const name = tag.name;
                         return (
