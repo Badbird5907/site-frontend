@@ -114,7 +114,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
                 <Container fixed>
                     <div className={styles.markdownHeader}>
                         <div>
-                            <h1 className={"centered markdown-title no-margin"}>
+                            <h1 className={"centered no-margin " + styles.markdownTitle}>
                                 {/*
                                 <Button variant={"outlined"} sx={{
                                     alignSelf: "flex-start",
@@ -194,7 +194,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
                                 },
                                 h1({node, className, children, ...props}) {
                                     return (
-                                        <h1 className={className + ` ${styles.blogHeader}`} {...props}>
+                                        <h1 className={className + ` ${styles.blogHeader} centered`} {...props}> {/*TODO: Add a way to toggle header center, and bottom line. */}
                                             {children}
                                         </h1>
                                     )
@@ -209,7 +209,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
                     loggedIn ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
                             if (typeof window !== 'undefined')
-                                window.location.href = "/admin/blog/" + data.id;
+                                window.location.href = "/admin/blog/edit/" + data.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,

@@ -43,6 +43,7 @@ const EditOrCreateBlog = (props: any) => {
 
     useEffect(() => {
         if (editing) {
+            if (id == undefined) return; // Wait for id to be set
             BlogAdminService.getMetadata(id as string).then((res) => {
                 console.log('--------------------------------------------')
                 console.log('Data: ', res.data);
@@ -75,12 +76,15 @@ const EditOrCreateBlog = (props: any) => {
                 setData(res.data);
             }).catch((err) => {
                 console.log('Error: ', err);
+                /*
                 Swal.fire({
                     title: 'Error',
                     text: 'There was an error while fetching the blog metadata. Please try again later.',
                     icon: 'error',
                     confirmButtonText: 'Okay'
                 });
+                 */
+
                 setError(true);
                 setCanRender(false)
             });
@@ -102,7 +106,7 @@ const EditOrCreateBlog = (props: any) => {
             setSelectedTagsFromBlog([])
             setCanRender(true);
         }
-    }, [])
+    }, [id])
 
     useEffect(() => {
         fetchTags();
@@ -279,6 +283,10 @@ const EditOrCreateBlog = (props: any) => {
                                     value={content}
                                     onChange={setContent}
                                 />
+                                <span style={{
+                                    // grey
+                                    color: '#b8b8b8'
+                                }}>Note that the markdown renderer used for this is different than the one used for blogs.</span>
                                 {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}

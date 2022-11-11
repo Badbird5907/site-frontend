@@ -29,7 +29,7 @@ const MenuProps = {
     },
 };
 
-const TagsPage = () => {
+const Index = () => {
     const [data, setData] = React.useState([]);
     const [canRender, setCanRender] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
@@ -315,6 +315,7 @@ const TagsPage = () => {
                               });
                           }}
                           getRowId={(row) => {
+                              // @ts-ignore - row.id exists
                               return row.id;
                           }}
                           onProcessRowUpdateError={(error) => {
@@ -336,4 +337,4 @@ const TagsPage = () => {
     );
 };
 
-export default TagsPage;
+export default Index;
