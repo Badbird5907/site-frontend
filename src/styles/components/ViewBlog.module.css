@@ -1,6 +1,6 @@
 .markdown-body {
 }
-.markdown-body h1 {
+.blog-header {
     padding-bottom: 0.3em;
     font-size: 2em;
     border-bottom: 1px solid #47505c;
@@ -8,19 +8,14 @@
 .markdown-title {
     font-size: 4.5vh;
 }
-.blog-header {
-
-}
 .markdown-header {
     padding-bottom: 0.3em;
 }
-.border-bottom {
-    border-bottom: 1px solid #47505c;
-}
+
 .line-height-1_1 {
     line-height: 1.1;
 }
-.tag {
+.blog-tag {
     color: white !important;
 }
 .edit-button {

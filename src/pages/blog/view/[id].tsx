@@ -16,8 +16,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import AuthService from "../../../services/AuthService";
 import {ETagIcon} from "../../../services/TagsService";
 import {useRouter} from "next/router";
+import styles from '../../../styles/components/ViewBlog.module.css'
 
-const ViewBlog = (props: any) => {
+const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
     const {id} = router.query;
 
@@ -29,6 +30,7 @@ const ViewBlog = (props: any) => {
     const [author, setAuthor]: any = useState(null);
     const [authorImg, setAuthorImg]: any = useState(null);
     const [errorData, setErrorData]: any = useState(null);
+    const [loggedIn, setLoggedIn]: any = useState(false);
     useEffect(() => {
         // get current url
         if (typeof window !== 'undefined') {
@@ -40,6 +42,7 @@ const ViewBlog = (props: any) => {
             setId(lastPart); // Fuckin next.js won't work
              */
         }
+        setLoggedIn(AuthService.isLoggedIn())
     }, [])
     useEffect(() => {
         if (id == null) return;
@@ -109,7 +112,7 @@ const ViewBlog = (props: any) => {
         return (
             <div>
                 <Container fixed>
-                    <div className={"markdown-header"}>
+                    <div className={styles.markdownHeader}>
                         <div>
                             <h1 className={"centered markdown-title no-margin"}>
                                 {/*
@@ -163,7 +166,7 @@ const ViewBlog = (props: any) => {
                         </div>
                         <h1 className={"centered border-bottom"}></h1>
                     </div>
-                    <div className={"markdown-body"}>
+                    <div className={styles.markdownBody}>
                         <ReactMarkdown
                             components={{
                                 code({node, inline, className, children, ...props}) {
@@ -184,9 +187,16 @@ const ViewBlog = (props: any) => {
                                 },
                                 a({node, className, children, ...props}) {
                                     return (
-                                        <a className={className + ' blog-link'} {...props}>
+                                        <a className={className + ` ${styles.blogLink}`} {...props}>
                                             {children}
                                         </a>
+                                    )
+                                },
+                                h1({node, className, children, ...props}) {
+                                    return (
+                                        <h1 className={className + ` ${styles.blogHeader}`} {...props}>
+                                            {children}
+                                        </h1>
                                     )
                                 }
                             }}
@@ -196,7 +206,7 @@ const ViewBlog = (props: any) => {
                 </Container>
 
                 {
-                    AuthService.isLoggedIn() ? (
+                    loggedIn ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
                             if (typeof window !== 'undefined')
                                 window.location.href = "/admin/blog/" + data.id;
@@ -218,3 +228,17 @@ const ViewBlog = (props: any) => {
     }
 };
 export default ViewBlog;
+export async function getStaticProps() {
+    return {
+        props: {},
+    };
+}
+export async function getStaticPaths() {
+    return {
+        paths: [
+            // String variant:
+            '/blog/view/[id]',
+         ],
+        fallback: true,
+    }
+}

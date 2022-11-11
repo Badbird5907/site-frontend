@@ -41,6 +41,8 @@ function Index() {
 
     const [infoPopoverOpen, setInfoPopoverOpen] = useState(false);
 
+    const [loggedIn, setLoggedIn] = useState(false);
+
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
         // set page query
@@ -48,6 +50,7 @@ function Index() {
     };
 
     useEffect(() => {
+        setLoggedIn(AuthService.isLoggedIn())
         updatePage()
     }, [])
 
@@ -207,7 +210,7 @@ function Index() {
             </Container>
 
             {
-                AuthService.isLoggedIn() ? (
+                loggedIn ? (
                     <Fab color="primary" aria-label="add" onClick={() => {
                         if (typeof window !== 'undefined')
                             window.location.href = '/admin/blog/create';
