@@ -131,7 +131,7 @@ function Index() {
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
                 <Stack direction={"column"} spacing={2}>
-                    {disableSearch ? <span className={'centered'}>Search is currently disabled.</span> :  <Stack direction="row" sx={{
+                    {disableSearch ? <span className={'centered'}>The search UI is currently disabled.</span> :  <Stack direction="row" sx={{
                         alignItems: 'center',
                         justifyContent: 'center'
                     }} spacing={2}>
