@@ -235,7 +235,9 @@ export async function getStaticProps() {
 }
 export async function getStaticPaths() { // Required for SSR
     return {
-        paths: [],
+        paths: [
+            '/blog/[id]'
+        ],
         fallback: true,
     }
 }
