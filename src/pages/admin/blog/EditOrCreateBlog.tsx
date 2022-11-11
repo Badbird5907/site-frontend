@@ -283,10 +283,10 @@ const EditOrCreateBlog = (props: any) => {
                                     value={content}
                                     onChange={setContent}
                                 />
-                                <span style={{
+                                <small style={{
                                     // grey
                                     color: '#b8b8b8'
-                                }}>Note that the markdown renderer used for this is different than the one used for blogs.</span>
+                                }}>Note that the markdown renderer used for this is different than the one used for blogs.</small>
                                 {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}

@@ -43,7 +43,7 @@ const list = () => (
                 </ListItemButton>
             </ListItem>
             <ListItem key={'blogsIcon'} disablePadding>
-                <ListItemButton href={"/blogs"}>
+                <ListItemButton href={"/blog"}>
                     <ListItemIcon><BookIcon/></ListItemIcon>
                     <ListItemText primary={'Blogs'}/>
                 </ListItemButton>

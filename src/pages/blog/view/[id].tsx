@@ -223,7 +223,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
         );
     } else {
         return (
-            <h1>Loading...</h1>
+            <h1>Loading Blog...</h1>
         )
     }
 };

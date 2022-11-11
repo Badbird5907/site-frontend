@@ -28,7 +28,8 @@ const BlogList = (props: any) => {
                             <Card variant={'outlined'}
                                   sx={{
                                       backgroundColor: '#1e1e1e',
-                                      cursor: 'pointer'
+                                      cursor: 'pointer',
+                                      margin: '1rem'
                                   }}
                                   key={id}
                                   className={styles.inner}
@@ -83,7 +84,7 @@ const BlogList = (props: any) => {
     } else {
         return (
             <div>
-                Loading...
+                Loading Blog Data...
             </div>
         )
     }

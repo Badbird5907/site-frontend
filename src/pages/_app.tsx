@@ -16,6 +16,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {SnackbarProvider} from "notistack";
 import {theme} from "../utils/Theme";
 import ErrorBoundary from "../components/ErrorBoundary";
+import AdminDrawer from "../components/admin/AdminDrawer"
 
 const MyApp = ({Component, pageProps}: AppProps) => {
     const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
@@ -60,6 +61,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             <SnackbarProvider maxSnack={5}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                     <ErrorBoundary>
+                        {loggedIn ? <AdminDrawer /> : null}
                         <Component {...pageProps} />
                     </ErrorBoundary>
                 </LocalizationProvider>
