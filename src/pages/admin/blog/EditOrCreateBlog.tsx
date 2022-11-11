@@ -12,10 +12,11 @@ import Swal from "sweetalert2";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
+import AuthService from "../../../services/AuthService";
 
 const MDEditor = dynamic(
     () => import("@uiw/react-md-editor").then((mod) => mod.default),
-    { ssr: false }
+    {ssr: false}
 );
 const EditOrCreateBlog = (props: any) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -40,6 +41,12 @@ const EditOrCreateBlog = (props: any) => {
     const [customAuthorImg, setCustomAuthorImg] = useState('');
 
     const [canRenderTags, setCanRenderTags] = useState(false);
+
+    useEffect(()=> {
+        if (!AuthService.isLoggedIn()) {
+            window.location.href = '/login' // It doesn't matter if people can access this page, since the API is protected
+        }
+    }, [])
 
     useEffect(() => {
         if (editing) {
@@ -226,7 +233,7 @@ const EditOrCreateBlog = (props: any) => {
             console.log('new-Selected tags: ', selectedTags);
             console.log('new-Available tags: ', availableTags);
             setCanRender(true);
-            setTimeout(()=> {
+            setTimeout(() => {
                 setCanRenderTags(true)
             }, 1000) // This is to fix race condition
         });
@@ -245,7 +252,8 @@ const EditOrCreateBlog = (props: any) => {
             {canRender && data && allTags ?
                 <>
                     <br/>
-                    {editing ? <Button href={"/blog/view/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
+                    {editing ?
+                        <Button href={"/blog/view/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
                     <br/>
                     <FormControl>
                         {/* TODO: I'm hardcoding this with stack, too tired to mess with grid again */}
@@ -286,7 +294,8 @@ const EditOrCreateBlog = (props: any) => {
                                 <small style={{
                                     // grey
                                     color: '#b8b8b8'
-                                }}>Note that the markdown renderer used for this is different than the one used for blogs.</small>
+                                }}>Note that the markdown renderer used for this is different than the one used for
+                                    blogs.</small>
                                 {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}

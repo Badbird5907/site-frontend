@@ -17,6 +17,7 @@ import {Theme, useTheme} from "@mui/material/styles";
 import {DataGrid, GridCellEditCommitParams, MuiBaseEvent} from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
+import AuthService from "../../../services/AuthService";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,6 +40,12 @@ const Index = () => {
 
     useEffect(() => {
         update()
+    }, [])
+
+    useEffect(()=> {
+        if (!AuthService.isLoggedIn()) {
+            window.location.href = '/login' // It doesn't matter if people can access this page, since the API is protected
+        }
     }, [])
 
     function update() {
