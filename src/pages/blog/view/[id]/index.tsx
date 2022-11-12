@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AuthService from "../../../../services/AuthService";
 import {ETagIcon} from "../../../../services/TagsService";
 import {useRouter} from "next/router";
-import styles from '../../../styles/components/ViewBlog.module.css'
+import styles from '../../../../styles/components/ViewBlog.module.css'
 
 const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
