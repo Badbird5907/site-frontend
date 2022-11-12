@@ -17,6 +17,7 @@ import AuthService from "../../../../services/AuthService";
 import {ETagIcon} from "../../../../services/TagsService";
 import {useRouter} from "next/router";
 import styles from '../../../../styles/components/ViewBlog.module.css'
+import {GetServerSideProps} from "next";
 
 const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
@@ -228,15 +229,9 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
     }
 };
 export default ViewBlog;
-export async function getStaticProps() {
+
+export async function getServerSideProps() {
     return {
         props: {},
     };
-}
-
-export async function getStaticPaths() { // Required for SSR
-    return {
-        paths: [],
-        fallback: true,
-    }
 }
