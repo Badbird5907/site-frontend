@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 //@ts-ignore
 //import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import GHColorsPrism from "../../../utils/GHColors.prism";
+import GHColorsPrism from "../../../../utils/GHColors.prism";
 import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
