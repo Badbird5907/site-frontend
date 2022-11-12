@@ -11,10 +11,10 @@ import GHColorsPrism from "../../../utils/GHColors.prism";
 import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
 import {WatchLater} from "@mui/icons-material";
 import moment from "moment";
-import {backendURL} from '../../../services/APIService';
+import {backendURL} from '../../../../services/APIService';
 import EditIcon from '@mui/icons-material/Edit';
-import AuthService from "../../../services/AuthService";
-import {ETagIcon} from "../../../services/TagsService";
+import AuthService from "../../../../services/AuthService";
+import {ETagIcon} from "../../../../services/TagsService";
 import {useRouter} from "next/router";
 import styles from '../../../styles/components/ViewBlog.module.css'
 
@@ -232,12 +232,4 @@ export async function getStaticProps() {
     return {
         props: {},
     };
-}
-export async function getStaticPaths() { // Required for SSR
-    return {
-        paths: [
-            '/blog/view/[id]'
-        ],
-        fallback: true,
-    }
 }
