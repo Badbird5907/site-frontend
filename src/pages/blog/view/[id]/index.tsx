@@ -233,3 +233,12 @@ export async function getStaticProps() {
         props: {},
     };
 }
+
+export async function getStaticPaths() { // Required for SSR
+    return {
+        paths: [
+            '/blog/view/'
+        ],
+        fallback: true,
+    }
+}
