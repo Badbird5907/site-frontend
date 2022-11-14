@@ -176,47 +176,47 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
 };
 export default ViewBlog;
 
-export const getServerSideProps: GetServerSideProps<{ data: Data }> = async (context) => {
+export async function getServerSideProps(context: any) {
     /*
-    useEffect(() => {
-       if (id == null) return;
-       console.log("Fetching blog data with id: " + id);
-       axios.get(backendURL + "blog/content/get/" + id).then((res) => {
-           console.log(res.data);
-           if (res.data.githubURL) {
-               setGithubURL(res.data.githubURL);
-           }
-           if (res.data.error) {
-               return;
-           }
-           const timestamp = res.data.timestamp;
-           var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
-           setTimestamp(date);
-           if (res.data.tags) {
-               const resTags = res.data.tags;
-               setTags(resTags);
-           }
-           if (res.data.author) {
-               setAuthor(res.data.author);
-           }
-           if (res.data.authorImg) {
-               setAuthorImg(res.data.authorImg);
-           } else {
-               setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
-           }
-           setData(res.data);
-       })
-           .catch((err) => {
-               console.log(err);
-               const data = err.response.data;
-               setError(true);
-               setErrorData(data);
-               if (data.githubURL) {
-                   setGithubURL(data.githubURL);
-               }
-           });
-   }, [id])
-    */
+     useEffect(() => {
+        if (id == null) return;
+        console.log("Fetching blog data with id: " + id);
+        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+            console.log(res.data);
+            if (res.data.githubURL) {
+                setGithubURL(res.data.githubURL);
+            }
+            if (res.data.error) {
+                return;
+            }
+            const timestamp = res.data.timestamp;
+            var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
+            setTimestamp(date);
+            if (res.data.tags) {
+                const resTags = res.data.tags;
+                setTags(resTags);
+            }
+            if (res.data.author) {
+                setAuthor(res.data.author);
+            }
+            if (res.data.authorImg) {
+                setAuthorImg(res.data.authorImg);
+            } else {
+                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
+            }
+            setData(res.data);
+        })
+            .catch((err) => {
+                console.log(err);
+                const data = err.response.data;
+                setError(true);
+                setErrorData(data);
+                if (data.githubURL) {
+                    setGithubURL(data.githubURL);
+                }
+            });
+    }, [id])
+     */
     let data = null,
         error = false,
         errorData = null,
