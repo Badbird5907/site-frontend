@@ -9,15 +9,13 @@ import TagsList from "./components/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
-import dynamic from "next/dynamic";
-import AuthService from "../../../services/AuthService";
+import 'react-markdown-editor-lite/lib/index.css';
+import ReactMarkdown from "react-markdown";
+import MdEditor from 'react-markdown-editor-lite';
 
-const MDEditor = dynamic(
-    () => import("@uiw/react-md-editor").then((mod) => mod.default),
-    {ssr: false}
-);
+import AuthService from "../../../services/AuthService";
+import MarkdownRenderer from "../../../components/MarkdownRenderer";
+
 const EditOrCreateBlog = (props: any) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const editing = props.editing;
@@ -287,15 +285,23 @@ const EditOrCreateBlog = (props: any) => {
                                 </div>
                             </Stack>
                             <div>
-                                <MDEditor
-                                    value={content}
-                                    onChange={setContent}
-                                />
+                                {/*
+                                  <MdEditor style={{ height: '500px' }} renderHTML={(text)=> {
+                                    return <MarkdownRenderer children={text} />
+                                }} onChange={({html, text})=> {
+                                    setContent(text);
+                                }} />
                                 <small style={{
                                     // grey
                                     color: '#b8b8b8'
                                 }}>Note that the markdown renderer used for this is different than the one used for
                                     blogs.</small>
+                                    */}
+
+                                <small style={{
+                                    // grey
+                                    color: '#b8b8b8'
+                                }}>The markdown editor is currently disabled.</small>
                                 {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}
