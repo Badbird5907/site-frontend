@@ -3,8 +3,8 @@ import {backendURL as apiBackend} from '../../services/APIService';
 import AuthService from "../../services/AuthService";
 import {Stack} from "@mui/material";
 
-const Index = () => {
-    const runtime = process.env.NEXT_RUNTIME;
+const Index = (props: any) => {
+    const {runtime} = props;
     const [backendURL, setBackendURL] = React.useState(apiBackend);
     const [loggedIn, setLoggedIn] = React.useState(AuthService.isLoggedIn());
 
@@ -20,3 +20,10 @@ const Index = () => {
 };
 
 export default Index;
+export async function getServerSideProps(context: any) {
+    return {
+        props: {
+            runtime: process.env.NEXT_RUNTIME
+        }
+    }
+}
