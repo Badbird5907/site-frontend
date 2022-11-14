@@ -1,8 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 //import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
-import {WatchLater} from "@mui/icons-material";
+//import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+//import {WatchLater} from "@mui/icons-material";
+import WatchLater from "@mui/icons-material/WatchLater";
 import moment from "moment";
 import {backendURL} from '../../../services/APIService';
 import EditIcon from '@mui/icons-material/Edit';
@@ -137,46 +143,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
 export default ViewBlog;
 
 export async function getServerSideProps(context: any) {
-    /*
-     useEffect(() => {
-        if (id == null) return;
-        console.log("Fetching blog data with id: " + id);
-        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
-            console.log(res.data);
-            if (res.data.githubURL) {
-                setGithubURL(res.data.githubURL);
-            }
-            if (res.data.error) {
-                return;
-            }
-            const timestamp = res.data.timestamp;
-            var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
-            setTimestamp(date);
-            if (res.data.tags) {
-                const resTags = res.data.tags;
-                setTags(resTags);
-            }
-            if (res.data.author) {
-                setAuthor(res.data.author);
-            }
-            if (res.data.authorImg) {
-                setAuthorImg(res.data.authorImg);
-            } else {
-                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
-            }
-            setData(res.data);
-        })
-            .catch((err) => {
-                console.log(err);
-                const data = err.response.data;
-                setError(true);
-                setErrorData(data);
-                if (data.githubURL) {
-                    setGithubURL(data.githubURL);
-                }
-            });
-    }, [id])
-     */
+    console.log("getServerSideProps");
     let data = null,
         error = false,
         errorData = null,
@@ -197,7 +164,9 @@ export async function getServerSideProps(context: any) {
 
     if (id == null) return {props: {}};
 
+    console.log("Fetching blog with id: " + id);
     await axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+        console.log("Got response: " + res.data);
         if (res.data.githubURL) {
             githubURL = res.data.githubURL;
         }
