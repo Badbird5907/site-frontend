@@ -1,0 +1,31 @@
+/* Duplicate of viewblog */
+.markdown-body {
+}
+.blogHeader {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: 1px solid #47505c;
+}
+.markdownTitle {
+    font-size: 4.5vh;
+}
+.markdown-header {
+    padding-bottom: 0.3em;
+}
+
+.line-height-1_1 {
+    line-height: 1.1;
+}
+.blog-tag {
+    color: white !important;
+}
+.edit-button {
+    /* Stick it to the bottom right so it stays there even when scrolling*/
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    z-index: 10;
+}
+.blog-link {
+    color: #9e9ef0;
+}

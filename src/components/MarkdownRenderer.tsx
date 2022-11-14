@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from "react-markdown";
 import GHColorsPrism from "../utils/GHColors.prism";
-import styles from "../styles/components/ViewBlog.module.css";
+import styles from '../styles/components/MarkdownRenderer.module.css'
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 //@ts-ignore
