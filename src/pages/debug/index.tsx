@@ -4,7 +4,7 @@ import AuthService from "../../services/AuthService";
 import {Stack} from "@mui/material";
 
 const Index = (props: any) => {
-    const {runtime} = props;
+    const {runtime, mode} = props;
     const [backendURL, setBackendURL] = React.useState(apiBackend);
     const [loggedIn, setLoggedIn] = React.useState(AuthService.isLoggedIn());
 
@@ -12,6 +12,7 @@ const Index = (props: any) => {
         <div>
             <Stack direction={"column"} spacing={2}>
                 <span>Runtime: {runtime}</span>
+                <span>Mode: {mode}</span>
                 <span>Backend URL: {backendURL}</span>
                 <span>Logged in: {loggedIn ? "true" : "false"}</span>
             </Stack>
@@ -23,7 +24,8 @@ export default Index;
 export async function getServerSideProps(context: any) {
     return {
         props: {
-            runtime: process.env.NEXT_RUNTIME
+            runtime: process.env.NEXT_RUNTIME,
+            mode: process.env.NODE_ENV,
         }
     }
 }
