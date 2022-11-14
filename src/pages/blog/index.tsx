@@ -198,6 +198,7 @@ function Index() {
                                     <Pagination className={"centered"} count={totalPages}
                                                 defaultPage={defaultPage as number} page={page as number}
                                                 onChange={handleChange}/> : null}
+                                <span className={"centered"}>Blog loading may be slow. This is being worked on.</span>
                                 <BlogList data={blogs}/>
                                 {totalPages && totalPages > 1 ?
                                     <Pagination className={"centered"} count={totalPages}
