@@ -1,4 +1,5 @@
 import React from 'react';
+import Typewriter from "typewriter-effect";
 import {Button} from "@mui/material";
 //import {Button, Stack} from "@mui/material";
 import styles from './home.module.css'
@@ -13,8 +14,7 @@ const Home = () => {
                     <h3>But people call me Bad. <i>sometimes</i></h3>
                     <h3>I'm a:</h3>
                     <h3>
-                        {/*
-     <Typewriter
+                        <Typewriter
                             options={{
                                 strings: ['Full Stack Developer', 'Freelancer', 'Student', 'Video Editor'],
                                 autoStart: true,
@@ -22,7 +22,6 @@ const Home = () => {
                                 delay: 70,
                             }}
                         />
-                        */}
                     </h3>
                     {/*
   <div className={"centered"}>
