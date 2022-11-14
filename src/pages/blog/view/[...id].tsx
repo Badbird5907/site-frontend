@@ -11,7 +11,6 @@ import {ETagIcon} from "../../../services/TagsService";
 import {useRouter} from "next/router";
 import styles from '../../../styles/components/ViewBlog.module.css'
 import MarkdownRenderer from "../../../components/MarkdownRenderer";
-import cache from "memory-cache";
 
 const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
@@ -138,10 +137,46 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
 export default ViewBlog;
 
 export async function getServerSideProps(context: any) {
-    const id = context.params.id;
-
-    const cachedResponse = cache.get(id);
-
+    /*
+     useEffect(() => {
+        if (id == null) return;
+        console.log("Fetching blog data with id: " + id);
+        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+            console.log(res.data);
+            if (res.data.githubURL) {
+                setGithubURL(res.data.githubURL);
+            }
+            if (res.data.error) {
+                return;
+            }
+            const timestamp = res.data.timestamp;
+            var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
+            setTimestamp(date);
+            if (res.data.tags) {
+                const resTags = res.data.tags;
+                setTags(resTags);
+            }
+            if (res.data.author) {
+                setAuthor(res.data.author);
+            }
+            if (res.data.authorImg) {
+                setAuthorImg(res.data.authorImg);
+            } else {
+                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
+            }
+            setData(res.data);
+        })
+            .catch((err) => {
+                console.log(err);
+                const data = err.response.data;
+                setError(true);
+                setErrorData(data);
+                if (data.githubURL) {
+                    setGithubURL(data.githubURL);
+                }
+            });
+    }, [id])
+     */
     let data = null,
         error = false,
         errorData = null,
@@ -151,6 +186,7 @@ export async function getServerSideProps(context: any) {
         author = null,
         authorImg = null;
 
+    const id = context.params.id;
 
     const {req, res} = context;
 
@@ -161,42 +197,30 @@ export async function getServerSideProps(context: any) {
 
     if (id == null) return {props: {}};
 
-    if (cachedResponse) {
-        console.log("Using cached response for blog " + id);
-        githubURL = cachedResponse.githubURL;
-        timestamp = cachedResponse.timestamp;
-        tags = cachedResponse.tags;
-        author = cachedResponse.author;
-        authorImg = cachedResponse.authorImg;
-        data = cachedResponse.data;
-    } else {
-        await axios.get(backendURL + "blog/content/get/" + id).then((res) => {
-            if (res.data.githubURL) {
-                githubURL = res.data.githubURL;
-            }
-            if (res.data.error) {
-                error = true;
-                errorData = res.data;
-                return;
-            }
-            const timestampData = res.data.timestamp;
-            timestamp = moment(timestampData).format("MM/DD/YYYY, h:mm A");
-            if (res.data.tags) {
-                tags = res.data.tags;
-            }
-            if (res.data.author) {
-                author = res.data.author;
-            }
-            if (res.data.authorImg) {
-                authorImg = res.data.authorImg;
-            } else {
-                authorImg = "https://cdn.badbird.dev/assets/user.jpg";
-            }
-            data = res.data;
-            const cacheHours = 10; // TODO: Get cache hours from config or backend or something
-            cache.put(id, res.data, cacheHours * 60 * 60 * 1000);
-        })
-    }
+    await axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+        if (res.data.githubURL) {
+            githubURL = res.data.githubURL;
+        }
+        if (res.data.error) {
+            error = true;
+            errorData = res.data;
+            return;
+        }
+        const timestampData = res.data.timestamp;
+        timestamp = moment(timestampData).format("MM/DD/YYYY, h:mm A");
+        if (res.data.tags) {
+            tags = res.data.tags;
+        }
+        if (res.data.author) {
+            author = res.data.author;
+        }
+        if (res.data.authorImg) {
+            authorImg = res.data.authorImg;
+        } else {
+            authorImg = "https://cdn.badbird.dev/assets/user.jpg";
+        }
+        data = res.data;
+    })
 
     return {
         props: {
