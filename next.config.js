@@ -1,3 +1,4 @@
-export default {
+const nextConfig = {
 
 }
+export default nextConfig;
