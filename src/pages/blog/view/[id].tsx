@@ -17,72 +17,18 @@ import AuthService from "../../../services/AuthService";
 import {ETagIcon} from "../../../services/TagsService";
 import {useRouter} from "next/router";
 import styles from '../../../styles/components/ViewBlog.module.css'
-import {GetServerSideProps} from "next";
 
 const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
     const {id} = router.query;
+    const {data, timestamp, tags, error, githubURL, author, authorImg, errorData} = props;
 
-    const [data, setData]: any = useState(null);
-    const [timestamp, setTimestamp]: any = useState(null);
-    const [tags, setTags]: any = useState([]);
-    const [error, setError]: any = useState(false);
-    const [githubURL, setGithubURL]: any = useState(null);
-    const [author, setAuthor]: any = useState(null);
-    const [authorImg, setAuthorImg]: any = useState(null);
-    const [errorData, setErrorData]: any = useState(null);
-    const [loggedIn, setLoggedIn]: any = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+
     useEffect(() => {
-        // get current url
-        if (typeof window !== 'undefined') {
-            /*
-            const url = window.location.href;
-            // get the last part of the url
-            const urlParts = url.split('/');
-            const lastPart = urlParts[urlParts.length - 1];
-            setId(lastPart); // Fuckin next.js won't work
-             */
-        }
         setLoggedIn(AuthService.isLoggedIn())
     }, [])
-    useEffect(() => {
-        if (id == null) return;
-        console.log("Fetching blog data with id: " + id);
-        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
-            console.log(res.data);
-            if (res.data.githubURL) {
-                setGithubURL(res.data.githubURL);
-            }
-            if (res.data.error) {
-                return;
-            }
-            const timestamp = res.data.timestamp;
-            var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
-            setTimestamp(date);
-            if (res.data.tags) {
-                const resTags = res.data.tags;
-                setTags(resTags);
-            }
-            if (res.data.author) {
-                setAuthor(res.data.author);
-            }
-            if (res.data.authorImg) {
-                setAuthorImg(res.data.authorImg);
-            } else {
-                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
-            }
-            setData(res.data);
-        })
-            .catch((err) => {
-                console.log(err);
-                const data = err.response.data;
-                setError(true);
-                setErrorData(data);
-                if (data.githubURL) {
-                    setGithubURL(data.githubURL);
-                }
-            });
-    }, [id])
+
     if (error) {
         var ghUrl = null;
         if (githubURL) {
@@ -230,8 +176,102 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
 };
 export default ViewBlog;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+    /*
+     useEffect(() => {
+        if (id == null) return;
+        console.log("Fetching blog data with id: " + id);
+        axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+            console.log(res.data);
+            if (res.data.githubURL) {
+                setGithubURL(res.data.githubURL);
+            }
+            if (res.data.error) {
+                return;
+            }
+            const timestamp = res.data.timestamp;
+            var date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
+            setTimestamp(date);
+            if (res.data.tags) {
+                const resTags = res.data.tags;
+                setTags(resTags);
+            }
+            if (res.data.author) {
+                setAuthor(res.data.author);
+            }
+            if (res.data.authorImg) {
+                setAuthorImg(res.data.authorImg);
+            } else {
+                setAuthorImg("https://cdn.badbird.dev/assets/user.jpg");
+            }
+            setData(res.data);
+        })
+            .catch((err) => {
+                console.log(err);
+                const data = err.response.data;
+                setError(true);
+                setErrorData(data);
+                if (data.githubURL) {
+                    setGithubURL(data.githubURL);
+                }
+            });
+    }, [id])
+     */
+    let data = null,
+        error = false,
+        errorData = null,
+        githubURL = null,
+        timestamp = null,
+        tags = null,
+        author = null,
+        authorImg = null;
+
+    const id = context.params.id;
+
+    const {req, res} = context;
+
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=20, stale-while-revalidate=59'
+    )
+
+    if (id == null) return {props: {}};
+
+    await axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+        if (res.data.githubURL) {
+            githubURL = res.data.githubURL;
+        }
+        if (res.data.error) {
+            error = true;
+            errorData = res.data;
+            return;
+        }
+        const timestampData = res.data.timestamp;
+        timestamp = moment(timestampData).format("MM/DD/YYYY, h:mm A");
+        if (res.data.tags) {
+            tags = res.data.tags;
+        }
+        if (res.data.author) {
+            author = res.data.author;
+        }
+        if (res.data.authorImg) {
+            authorImg = res.data.authorImg;
+        } else {
+            authorImg = "https://cdn.badbird.dev/assets/user.jpg";
+        }
+        data = res.data;
+    })
+
     return {
-        props: {},
-    };
+        props: {
+            data,
+            error,
+            errorData,
+            githubURL,
+            timestamp,
+            tags,
+            author,
+            authorImg
+        }
+    }
 }
