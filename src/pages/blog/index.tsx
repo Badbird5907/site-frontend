@@ -22,6 +22,8 @@ import {useRouter} from "next/router";
 function Index() {
     const disableSearch = true; // next js broke it
 
+    const runtime = process.env.NEXT_RUNTIME;
+
     const [data, setData] = useState(null);
     const [fetched, setFetched] = useState(false);
     const [error, setError] = useState(false);
@@ -130,6 +132,7 @@ function Index() {
         <div>
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
+                <span>Runtime: {runtime}</span>
                 <Stack direction={"column"} spacing={2}>
                     {disableSearch ? <span className={'centered'}>The search UI is currently disabled.</span> :  <Stack direction="row" sx={{
                         alignItems: 'center',
