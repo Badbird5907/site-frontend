@@ -1,6 +1,7 @@
 const edgeRuntime = {
     experimental: {
-        runtime: 'experimental-edge'
+        runtime: 'experimental-edge',
+        largePageDataBytes: 10 * 1024 * 1024 // 10MB
     }
 }
 const nextConfig = {
