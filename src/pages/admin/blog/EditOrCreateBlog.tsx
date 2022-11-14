@@ -9,12 +9,7 @@ import TagsList from "./components/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 
-import 'react-markdown-editor-lite/lib/index.css';
-import ReactMarkdown from "react-markdown";
-import MdEditor from 'react-markdown-editor-lite';
-
 import AuthService from "../../../services/AuthService";
-import MarkdownRenderer from "../../../components/MarkdownRenderer";
 
 const EditOrCreateBlog = (props: any) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
