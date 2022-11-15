@@ -167,7 +167,7 @@ const Index = (props: any) => {
                                     <Pagination className={"centered"} count={totalPages}
                                                 defaultPage={defaultPage as number} page={page as number}
                                                 onChange={handleChange}/> : null}
-                                <span className={"centered"}>Blog loading may be slow. This is being worked on.</span>
+                                {page > 1 ? <span className={"centered"}>Older blogs may take longer to display.</span> : null}
                                 <BlogList data={blogs}/>
                                 {totalPages && totalPages > 1 ?
                                     <Pagination className={"centered"} count={totalPages}
