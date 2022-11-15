@@ -10,13 +10,14 @@ import Stack from "@mui/material/Stack";
 //import {WatchLater} from "@mui/icons-material";
 import WatchLater from "@mui/icons-material/WatchLater";
 import moment from "moment";
-import {backendURL} from '../../../services/APIService';
+import {backendURL} from '../../services/APIService';
 import EditIcon from '@mui/icons-material/Edit';
-import AuthService from "../../../services/AuthService";
-import {ETagIcon} from "../../../services/TagsService";
+import AuthService from "../../services/AuthService";
+import {ETagIcon} from "../../services/TagsService";
 import {useRouter} from "next/router";
-import styles from '../../../styles/components/ViewBlog.module.css'
-import MarkdownRenderer from "../../../components/MarkdownRenderer";
+import styles from '../../styles/components/ViewBlog.module.css'
+import MarkdownRenderer from "../../components/MarkdownRenderer";
+import BlogService from "../../services/BlogService";
 
 const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
     const router = useRouter();
@@ -142,8 +143,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
 };
 export default ViewBlog;
 
-export async function getServerSideProps(context: any) {
-    console.log("getServerSideProps");
+export async function getStaticProps(context: any) {
     let data = null,
         error = false,
         errorData = null,
@@ -155,12 +155,12 @@ export async function getServerSideProps(context: any) {
 
     const id = context.params.id;
 
-    const {req, res} = context;
-
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=20, stale-while-revalidate=59'
-    )
+    // We don't need this now, since we're using static gen
+    //const {req, res} = context;
+    //res.setHeader(
+    //    'Cache-Control',
+    //    'public, s-maxage=20, stale-while-revalidate=59'
+    //)
 
     if (id == null) return {props: {}};
 
@@ -202,5 +202,22 @@ export async function getServerSideProps(context: any) {
             author,
             authorImg
         }
+    }
+}
+
+export async function getStaticPaths() {
+    const res = await BlogService.fetchLatestPage(); // axios call to get latest 10 blog posts
+    const data = res.data;
+    const {blogs} = data;
+    const basePath = "/blog/";
+    let pathsObj = [];
+    for (let i = 0; i < blogs.length; i++) {
+        const blog = blogs[i];
+        const safeName = blog.safeName;
+        pathsObj.push(basePath + safeName);
+    }
+    return {
+        fallback: 'blocking',
+        paths: pathsObj
     }
 }

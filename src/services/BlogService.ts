@@ -4,7 +4,7 @@ import {backendURL} from "./APIService";
 const API_URL = backendURL + "blog/";
 
 class BlogService {
-    fetchPage(page: number = 1, size: number = 15, order: string = 'desc', query: string, tags: any, author: string = '') {
+    fetchPage(page: number = 1, size: number = 15, order: string = 'asc', query: string, tags: any, author: string = '') {
         //?order=desc&search=undefined&tags=undefined& 400
         var url = API_URL + 'list?';
         if (page != 1) {
@@ -35,6 +35,9 @@ class BlogService {
         return axios.get(url);
     }
 
+    fetchLatestPage() {
+        return this.fetchPage(1, 15, 'asc', '', [], '');
+    }
 }
 
 export default new BlogService();

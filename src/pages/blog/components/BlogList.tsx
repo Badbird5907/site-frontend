@@ -35,7 +35,7 @@ const BlogList = (props: any) => {
                                   className={styles.inner}
                                   onClick={() => {
                                       if (typeof window !== 'undefined')
-                                          window.location.href = "/blog/view/" + safeName;
+                                          window.location.href = "/blog/" + safeName;
                                   }}
                             >
 

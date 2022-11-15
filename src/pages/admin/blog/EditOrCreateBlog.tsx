@@ -177,7 +177,7 @@ const EditOrCreateBlog = (props: any) => {
                         icon: 'success'
                     }).then(() => {
                         if (typeof window !== 'undefined')
-                            window.location.href = '/blog/view/' + res.data.url;
+                            window.location.href = '/blog/' + res.data.url;
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -246,7 +246,7 @@ const EditOrCreateBlog = (props: any) => {
                 <>
                     <br/>
                     {editing ?
-                        <Button href={"/blog/view/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
+                        <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
                     <br/>
                     <FormControl>
                         {/* TODO: I'm hardcoding this with stack, too tired to mess with grid again */}
