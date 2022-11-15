@@ -17,6 +17,7 @@ import TagFilter from "../../components/pages/blog/TagFilter";
 import BlogList from "../../components/pages/blog/BlogList";
 import AddIcon from "@mui/icons-material/Add";
 import AuthService from "../../services/AuthService";
+import Head from "next/head";
 
 export async function getServerSideProps(context: any) {
     const page = getOrDefaultParam("page", 1, context);
@@ -94,7 +95,10 @@ const Index = (props: any) => {
         return defaultValue;
     }
     return (
-        <div>
+        <>
+            <Head>
+                <title>Blog List</title>
+            </Head>
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
                 <Stack direction={"column"} spacing={2}>
@@ -196,7 +200,7 @@ const Index = (props: any) => {
                     </Fab>
                 ) : null
             }
-        </div>
+        </>
     );
 
     function updatePage() {

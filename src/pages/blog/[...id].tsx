@@ -15,8 +15,9 @@ import {useRouter} from "next/router";
 import styles from '../../styles/components/ViewBlog.module.css'
 import MarkdownRenderer from "../../components/MarkdownRenderer";
 import BlogService from "../../services/BlogService";
+import Head from "next/head";
 
-const ViewBlog = (props: any) => {
+const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
     const router = useRouter();
     const {id} = router.query;
     const {data, timestamp, tags, error, githubURL, author, authorImg, errorData} = props;
@@ -55,12 +56,16 @@ const ViewBlog = (props: any) => {
     }
     if (data != null) {
         return (
-            <div>
-                <Container fixed>
-                    <div className={styles.markdownHeader}>
-                        <div>
-                            <h1 className={"centered no-margin " + styles.markdownTitle}>
-                                {/*
+            <>
+                <Head>
+                    <title>{data.title}</title>
+                </Head>
+                <div>
+                    <Container fixed>
+                        <div className={styles.markdownHeader}>
+                            <div>
+                                <h1 className={"centered no-margin " + styles.markdownTitle}>
+                                    {/*
                                 <Button variant={"outlined"} sx={{
                                     alignSelf: "flex-start",
                                     display: "inline-flex"
@@ -69,68 +74,69 @@ const ViewBlog = (props: any) => {
                                     history.back();
                                 }}>Back</Button>
                                 */}
-                                {data.title}
-                            </h1>
-                        </div>
-                        <div>
-                            <div className={"centered"}>
-                                <Stack direction={"row"} spacing={1} sx={{
-                                    marginBottom: '15px'
-                                }}>
-                                    {tags && tags.map((tag: any) => {
-                                            const id = tag.id;
-                                            const name = tag.name;
-                                            const eTagIcon = ETagIcon.getIconByName(tag.icon);
-                                            var Icon = null;
-                                            if (eTagIcon) {
-                                                Icon = eTagIcon.getIcon();
-                                            } else Icon = null;
-                                            if (Icon)
-                                                return (
-                                                    <Chip key={"tag-" + id} label={name} avatar={<Icon/>}/>
+                                    {data.title}
+                                </h1>
+                            </div>
+                            <div>
+                                <div className={"centered"}>
+                                    <Stack direction={"row"} spacing={1} sx={{
+                                        marginBottom: '15px'
+                                    }}>
+                                        {tags && tags.map((tag: any) => {
+                                                const id = tag.id;
+                                                const name = tag.name;
+                                                const eTagIcon = ETagIcon.getIconByName(tag.icon);
+                                                var Icon = null;
+                                                if (eTagIcon) {
+                                                    Icon = eTagIcon.getIcon();
+                                                } else Icon = null;
+                                                if (Icon)
+                                                    return (
+                                                        <Chip key={"tag-" + id} label={name} avatar={<Icon/>}/>
+                                                    )
+                                                else return (
+                                                    <Chip key={"tag-" + id} label={name}/>
                                                 )
-                                            else return (
-                                                <Chip key={"tag-" + id} label={name}/>
-                                            )
-                                        }
-                                    )}
+                                            }
+                                        )}
+                                    </Stack>
+                                </div>
+                                <Stack direction={"row"} spacing={1} className={"center-horizontal"}>
+                                    <Chip
+                                        avatar={<WatchLater/>}
+                                        label={timestamp}
+                                        variant="outlined"
+                                    />
+                                    <Chip
+                                        avatar={<Avatar alt={author} src={authorImg}/>}
+                                        label={author}
+                                        variant="outlined"
+                                    />
                                 </Stack>
                             </div>
-                            <Stack direction={"row"} spacing={1} className={"center-horizontal"}>
-                                <Chip
-                                    avatar={<WatchLater/>}
-                                    label={timestamp}
-                                    variant="outlined"
-                                />
-                                <Chip
-                                    avatar={<Avatar alt={author} src={authorImg}/>}
-                                    label={author}
-                                    variant="outlined"
-                                />
-                            </Stack>
+                            <h1 className={"centered border-bottom"}></h1>
                         </div>
-                        <h1 className={"centered border-bottom"}></h1>
-                    </div>
-                    <article className={styles.markdownBody}>
-                        <MarkdownRenderer content={data.content}/>
-                    </article>
-                </Container>
+                        <article className={styles.markdownBody}>
+                            <MarkdownRenderer content={data.content}/>
+                        </article>
+                    </Container>
 
-                {
-                    loggedIn ? (
-                        <Fab color="primary" aria-label="add" onClick={() => {
-                            if (typeof window !== 'undefined')
-                                window.location.href = "/admin/blog/edit/" + data.id;
-                        }} sx={{
-                            position: 'fixed',
-                            bottom: 16,
-                            right: 16,
-                        }}>
-                            <EditIcon/>
-                        </Fab>
-                    ) : null
-                }
-            </div>
+                    {
+                        loggedIn ? (
+                            <Fab color="primary" aria-label="add" onClick={() => {
+                                if (typeof window !== 'undefined')
+                                    window.location.href = "/admin/blog/edit/" + data.id;
+                            }} sx={{
+                                position: 'fixed',
+                                bottom: 16,
+                                right: 16,
+                            }}>
+                                <EditIcon/>
+                            </Fab>
+                        ) : null
+                    }
+                </div>
+            </>
         );
     } else {
         return (
