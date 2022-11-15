@@ -5,7 +5,7 @@ import {DateTimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
 import SaveIcon from '@mui/icons-material/Save';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
-import TagsList from "./components/TagsList";
+import TagsList from "../../../components/pages/admin/blogs/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 

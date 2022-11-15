@@ -13,8 +13,8 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import TagFilter from "./components/TagFilter";
-import BlogList from "./components/BlogList";
+import TagFilter from "../../components/pages/blog/TagFilter";
+import BlogList from "../../components/pages/blog/BlogList";
 
 
 export async function getServerSideProps(context: any) {
