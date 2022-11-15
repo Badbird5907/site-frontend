@@ -3,7 +3,7 @@ import BlogService from "../../services/BlogService";
 import TagsService from "../../services/TagsService";
 import {
     Button,
-    Container,
+    Container, Fab,
     FormControl,
     MenuItem,
     Pagination,
@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 import TagFilter from "../../components/pages/blog/TagFilter";
 import BlogList from "../../components/pages/blog/BlogList";
-
+import AddIcon from "@mui/icons-material/Add";
+import AuthService from "../../services/AuthService";
 
 export async function getServerSideProps(context: any) {
     const page = getOrDefaultParam("page", 1, context);
@@ -61,7 +62,10 @@ const Index = (props: any) => {
 
     const [noBlogs, setNoBlogs] = useState(false);
 
+    const [loggedIn, setLoggedIn] = useState(false);
+
     useEffect(() => {
+        setLoggedIn(AuthService.isLoggedIn())
         TagsService.getTags().then((res) => {
             setAllTags(res.data.tags);
         })
@@ -176,9 +180,22 @@ const Index = (props: any) => {
                             </>
                         : <h2>Fetching posts...</h2>}
                 </Stack>
-
-
             </Container>
+
+            {
+                loggedIn ? (
+                    <Fab color="primary" aria-label="add" onClick={() => {
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/admin/blog/create';
+                    }} sx={{
+                        position: 'fixed',
+                        bottom: 16,
+                        right: 16,
+                    }}>
+                        <AddIcon/>
+                    </Fab>
+                ) : null
+            }
         </div>
     );
 

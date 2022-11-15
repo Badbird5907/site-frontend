@@ -1,8 +1,10 @@
 import React from 'react';
-import {Avatar, Card, CardActions, CardContent, CardMedia, styled} from "@mui/material";
+import {Avatar, Card, CardActions, CardContent, CardMedia, Stack, styled} from "@mui/material";
 import moment from "moment/moment";
 import styles from '../../../styles/components/BlogList.module.css'
 import AuthService from "../../../services/AuthService";
+import {ETagIcon} from "../../../services/TagsService";
+import Chip from "@mui/material/Chip";
 
 const BlogList = (props: any) => {
     const data = props.data;
@@ -22,6 +24,7 @@ const BlogList = (props: any) => {
                     const location: any = item.location; // json object of where the markdown files are hosted, ignore
                     const imageURL: string = item.imageURL;
                     const description: string = item.description;
+                    const tags: any[] = item.tags;
                     const date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
                     return (
                         <article className={'card'} key={id}>
@@ -46,7 +49,10 @@ const BlogList = (props: any) => {
                                         image={imageURL}
                                         alt="Image"
                                     /> : null}
-                                    <h2 className={"wh-imp centered"}>{title}</h2>
+                                    <h2 className={"wh-imp centered"} style={{
+                                        marginBottom: '0px',
+                                        marginTop: '1rem',
+                                    }}>{title}</h2>
                                 </div>
                                 <CardContent sx={{
                                     marginBottom: '0px',
@@ -63,7 +69,31 @@ const BlogList = (props: any) => {
                                         marginBottom: '0px',
                                     }} className={"centered wh-imp"}>{description}</p>
                                 </CardContent>
-                                <div className={"center-horizontal"}>
+                                <div className={"center-horizontal"} style={{
+                                    marginBottom: '0px'
+                                }} id={"tags"}>
+                                    <Stack direction="row" spacing={1}>
+                                        {tags && tags.map((tag: any) => {
+                                                const id = tag.id;
+                                                const name = tag.name;
+                                                const eTagIcon = ETagIcon.getIconByName(tag.icon);
+                                                let Icon = null;
+                                                if (eTagIcon) {
+                                                    Icon = eTagIcon.getIcon();
+                                                } else Icon = null;
+                                                if (Icon)
+                                                    return (
+                                                        <Chip key={"tag-" + id} label={name} avatar={<Icon/>}/>
+                                                    )
+                                                else return (
+                                                    <Chip key={"tag-" + id} label={name}/>
+                                                )
+                                            }
+                                        )}
+                                    </Stack>
+                                </div>
+                                <div className={"center-horizontal"} style={{
+                                }}>
                                     <CardActions sx={{
                                         marginTop: '0px',
                                         padding: '0px'
@@ -95,11 +125,17 @@ const CardInfo = (props: any) => {
     const authorImg: string = props.authorImg;
     return (
         <>
-            <Avatar aria-label="User Profile" src={authorImg}></Avatar>
+            <Avatar aria-label="User Profile" sx={{
+                marginTop: '0px',
+                marginBottom: '0px',
+            }} src={authorImg}></Avatar>
             <div style={{
                 display: 'flex',
             }}>
-                <h5 className={"wh-imp"}>{author}&nbsp;&bull;&nbsp;{date}</h5>
+                <h5 className={"wh-imp"} style={{
+                    marginTop: '1rem',
+                    marginBottom: '1rem',
+                }}>{author}&nbsp;&bull;&nbsp;{date}</h5>
             </div>
         </>
     );
