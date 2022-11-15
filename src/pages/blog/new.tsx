@@ -1,8 +1,20 @@
 import React, {useEffect, useState} from "react";
 import BlogService from "../../services/BlogService";
+import TagsService from "../../services/TagsService";
 
 const Index = (props: any) => {
-    const data = props.data;
+    const [data, setData] = useState(props.data); // props.data is the data from getServerSideProps
+    const [fetched, setFetched] = useState(true);
+    const [error, setError] = useState(false);
+
+    const [allTags, setAllTags] = useState([]);
+
+    useEffect(()=> {
+        TagsService.getTags().then((res) => {
+            setAllTags(res.data.tags);
+        })
+    }, [])
+
     return (
         <>
 
