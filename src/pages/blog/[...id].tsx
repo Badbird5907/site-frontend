@@ -28,6 +28,13 @@ const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
         setLoggedIn(AuthService.isLoggedIn())
     }, [])
 
+    React.useEffect(() => { // https://github.com/vercel/next.js/discussions/15262
+        const s = document.createElement("script");
+        s.setAttribute("src", "https://platform.twitter.com/widgets.js");
+        s.setAttribute("async", "true");
+        document.head.appendChild(s);
+    }, []);
+
     if (error) {
         let ghUrl = null;
         if (githubURL) {
