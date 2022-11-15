@@ -20,6 +20,7 @@ const MarkdownRenderer = (props: any) => {
                                 style={GHColorsPrism}
                                 language={match[1]}
                                 PreTag="div"
+                                className={styles.codeBlock}
                                 {...props}
                             />
                         ) : (

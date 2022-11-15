@@ -29,3 +29,7 @@
 .blog-link {
     color: #9e9ef0;
 }
+.codeBlock {
+    border-radius: 0.5em;
+    border: none !important;
+}

@@ -111,9 +111,9 @@ const ViewBlog = (props: any) => {
                         </div>
                         <h1 className={"centered border-bottom"}></h1>
                     </div>
-                    <div className={styles.markdownBody}>
+                    <article className={styles.markdownBody}>
                         <MarkdownRenderer content={data.content}/>
-                    </div>
+                    </article>
                 </Container>
 
                 {
