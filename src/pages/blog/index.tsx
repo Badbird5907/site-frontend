@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import BlogService from "../../services/BlogService";
-import BlogList from "./components/BlogList";
+import TagsService from "../../services/TagsService";
 import {
     Button,
     Container,
-    Fab,
+    FormControl,
     MenuItem,
     Pagination,
     Popover,
@@ -13,183 +13,152 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import TagsService from "../../services/TagsService";
 import TagFilter from "./components/TagFilter";
-import AuthService from "../../services/AuthService";
-import AddIcon from "@mui/icons-material/Add";
-import {useRouter} from "next/router";
+import BlogList from "./components/BlogList";
 
-function Index() {
-    const disableSearch = true; // next js broke it
-    const [data, setData] = useState(null);
-    const [fetched, setFetched] = useState(false);
+
+export async function getServerSideProps(context: any) {
+    const page = getOrDefaultParam("page", 1, context);
+    const size = getOrDefaultParam('size', 15, context);
+    const order = getOrDefaultParam('order', 'asc', context);
+    const search = getOrDefaultParam('search', '', context);
+    const tags = getOrDefaultParam('tags', [], context); // string[] of tag names/ids
+    const author = getOrDefaultParam('author', '', context);
+
+    const res = await BlogService.fetchPage(page, size, order, search, tags, author);
+    const {data} = res;
+    return {
+        props: {
+            data,
+            page,
+            size,
+            order,
+            search,
+            tags,
+            author
+        }
+    }
+}
+
+const Index = (props: any) => {
+    const disableSearch = false;
+
+    const [data, setData] = useState(props.data); // props.data is the data from getServerSideProps
+    const [blogs, setBlogs] = useState(props.data.blogs);
+
+    const [fetched, setFetched] = useState(true);
     const [error, setError] = useState(false);
-    const [blogs, setBlogs] = useState(null);
-    const [noBlogs, setNoBlogs] = useState(false);
 
-    const [searchParams, setSearchParams] = useState(useRouter().query.toString());
-    const [totalPages, setTotalPages] = useState(1);
-    const [order, setOrder] = useState('asc'); // FIXME not working well, page currently being reloaded as a workaround
-    const [search, setSearch] = useState("");
-    const [allTags, setAllTags] = useState([]);
+    const [order, setOrder] = useState(props.order);
+    const [search, setSearch] = useState(props.search);
     const [selectedTags, setSelectedTags] = useState([]);
 
-    const [page, setPage] = useState(1);
-    const [defaultPage, setDefaultPage] = useState(1);
-    const [firstRender, setFirstRender] = useState(true);
-
+    const [allTags, setAllTags] = useState([]);
     const [infoPopoverOpen, setInfoPopoverOpen] = useState(false);
+    const [totalPages, setTotalPages] = useState(props.data.totalPages);
+    const [defaultPage, setDefaultPage] = useState(1);
+    const [page, setPage] = useState(1);
 
-    const [loggedIn, setLoggedIn] = useState(false);
-
-    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value);
-        // set page query
-        updateParam('page', value);
-    };
+    const [noBlogs, setNoBlogs] = useState(false);
 
     useEffect(() => {
-        setLoggedIn(AuthService.isLoggedIn())
-        updatePage()
-    }, [])
-
-    useEffect(() => {
-        if (searchParams !== undefined) {
-            if (disableSearch) return;
-            // @ts-ignore - It can't be undefined
-            setOrder(searchParams.get("order") || "asc")
-            // @ts-ignore - It can't be undefined
-            setSearch(searchParams.get("search") || "")
-            // @ts-ignore - It can't be undefined
-            setSelectedTags(searchParams.getAll("tags") || [])
-        }
-
         TagsService.getTags().then((res) => {
             setAllTags(res.data.tags);
         })
     }, [])
 
-    function updatePage(orderIn: string = 'asc') {
-        console.log('Updating page...')
-        const page = getOrDefaultParam('page', 1);
-        setPage(page);
-        const size = getOrDefaultParam('size', 15);
-        const order = getOrDefaultParam('order', orderIn);
-        setOrder(order);
-        const search = getOrDefaultParam('search', '');
-        const tags = getOrDefaultParam('tags', []); // string[] of tag names/ids
-        const author = getOrDefaultParam('author', '');
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
+        // set page query
+        updateParam('page', value);
+        updatePage()
+    };
 
-        BlogService.fetchPage(page, size, order, search, tags, author)
-            // @ts-ignore
-            .then((res) => {
-                console.log(res.data);
-                setDefaultPage(res.data.page as number)
-                setPage(res.data.page as number)
-                setData(res.data);
-                setBlogs(res.data.blogs);
-                setFetched(true);
-                setTotalPages(res.data.totalPages);
-                setNoBlogs(res.data.blogs.length === 0);
-
-                if (page > 1 && noBlogs) {
-                    console.log('No blogs on page ' + page + ', redirecting to page 1')
-                    updateParam('page', 1);
-                    setPage(1);
-                    setDefaultPage(1)
-                }
-
-            }).catch((e: any) => {
-            console.error(e);
-            setError(true);
-        });
-    }
-
-    const updateParam = (key: string, value: any) => {
-        if (disableSearch) return;
-        const currentParams = new URLSearchParams(searchParams.toString());
-        currentParams.set(key, value);
-        // @ts-ignore - It can't be undefined
-        setSearchParams(currentParams);
-    }
-
-    function getOrDefaultParam(param: string, defaultValue: any): any {
-        if (disableSearch) return defaultValue;
-        // @ts-ignore - It can't be undefined
-        if (searchParams.has(param)) {
-            // @ts-ignore - It can't be undefined
-            return searchParams.get(param);
-        } else {
-            return defaultValue;
+    function updateParam(name: string, value: any) {
+        if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.set(name, value);
+            window.history.pushState({}, '', url.toString());
         }
     }
 
-
+    function getOrDefaultParam(name: string, defaultValue: any) {
+        if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name) || defaultValue;
+        }
+        return defaultValue;
+    }
     return (
         <div>
             <Container fixed>
                 <h1 className={"centered"}>Blog</h1>
                 <Stack direction={"column"} spacing={2}>
-                    {disableSearch ? <span className={'centered'}>The search UI is currently disabled.</span> :  <Stack direction="row" sx={{
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }} spacing={2}>
-                        <Select
-                            id="order-select"
-                            value={order}
-                            label="Order"
-                            onChange={(e) => {
-                                const val = e.target.value as string;
-                                updateParam('order', val);
-                                setOrder(val);
-                                updatePage(val);
+                    {disableSearch ?
+                        <span className={'centered'}>The search UI is currently disabled.</span> :
+                        <FormControl>
+                            <Stack direction="row" sx={{
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }} spacing={2}>
+                                <Select
+                                    id="order-select"
+                                    value={order}
+                                    label="Order"
+                                    onChange={(e) => {
+                                        const val = e.target.value as string;
+                                        updateParam('order', val);
+                                        setOrder(val);
+                                        updatePage();
 
-                                if (typeof window !== 'undefined')
-                                    window.location.reload();
-                            }}
-                        >
-                            <MenuItem value={'asc'}>Asc</MenuItem>
-                            <MenuItem value={'desc'}>Desc</MenuItem>
-                        </Select>
-                        <TextField id="search" label="Search" variant="outlined"
-                                   value={search}
-                                   autoComplete={"off"}
-                                   onChange={(e) => {
-                                       setSearch(e.target.value);
-                                       updateParam('search', e.target.value);
-                                   }}
-                                   onClick={(e) => {
-                                       setInfoPopoverOpen(true)
-                                   }}
-                        />
-                        <Popover
-                            id={'info-popover'}
-                            open={infoPopoverOpen}
-                            anchorEl={typeof document !== 'undefined' ? document.getElementById('search') : null}
-                            onClose={(e) => {
-                                setInfoPopoverOpen(false);
-                            }}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            disableAutoFocus={true}
-                            disableEnforceFocus={true}
-                        >
-                            <Typography sx={{p: 2}}>Search is currently very buggy.<br/>The code can be found <a
-                                target={"_blank"}
-                                href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
-                        </Popover>
-                        <TagFilter tags={allTags} onChange={(event: any) => {
-                            console.log('change: ', {event})
-                            // event is a array of tags
-                            setSelectedTags(event);
-                            updateParam('tags', event.join(','));
-                        }}/>
-                        <Button variant={"contained"} onClick={() => {
-                            updatePage();
-                        }}>Search</Button>
-                    </Stack>}
+                                        //if (typeof window !== 'undefined')
+                                        //    window.location.reload();
+                                    }}
+                                >
+                                    <MenuItem value={'asc'}>Asc</MenuItem>
+                                    <MenuItem value={'desc'}>Desc</MenuItem>
+                                </Select>
+                                <TextField id="search" label="Search" variant="outlined"
+                                           value={search}
+                                           autoComplete={"off"}
+                                           onChange={(e) => {
+                                               setSearch(e.target.value);
+                                               updateParam('search', e.target.value);
+                                           }}
+                                           onClick={(e) => {
+                                               setInfoPopoverOpen(true)
+                                           }}
+                                />
+                                <Popover
+                                    id={'info-popover'}
+                                    open={infoPopoverOpen}
+                                    anchorEl={typeof document !== 'undefined' ? document.getElementById('search') : null}
+                                    onClose={(e) => {
+                                        setInfoPopoverOpen(false);
+                                    }}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    disableAutoFocus={true}
+                                    disableEnforceFocus={true}
+                                >
+                                    <Typography sx={{p: 2}}>Search is currently very buggy.<br/>The code can be found <a
+                                        target={"_blank"}
+                                        href={'https://github.com/Badbird5907/site-backend/blob/master/src/main/java/dev/badbird/backend/controller/BlogController.java'}>here</a></Typography>
+                                </Popover>
+                                <TagFilter tags={allTags} onChange={(event: any) => {
+                                    console.log('change: ', {event})
+                                    // event is a array of tags
+                                    setSelectedTags(event);
+                                    updateParam('tags', event.join(','));
+                                }}/>
+                                <Button variant={"contained"} type={"submit"} onClick={() => {
+                                    updatePage();
+                                }}>Search</Button>
+                            </Stack>
+                        </FormControl>
+                    }
                     {error ? <h2 className={"centered"}>Error fetching blog posts!</h2> : null}
                     {fetched ?
                         noBlogs ? <h2 className={"centered"}>No blog posts found!</h2> :
@@ -207,24 +176,43 @@ function Index() {
                             </>
                         : <h2>Fetching posts...</h2>}
                 </Stack>
+
+
             </Container>
-
-            {
-                loggedIn ? (
-                    <Fab color="primary" aria-label="add" onClick={() => {
-                        if (typeof window !== 'undefined')
-                            window.location.href = '/admin/blog/create';
-                    }} sx={{
-                        position: 'fixed',
-                        bottom: 16,
-                        right: 16,
-                    }}>
-                        <AddIcon/>
-                    </Fab>
-                ) : null
-            }
         </div>
-    )
-}
+    );
 
-export default Index
+    function updatePage() {
+        if (disableSearch) return;
+        const page = getOrDefaultParam("page", 1);
+        const size = getOrDefaultParam('size', 15);
+        const order = getOrDefaultParam('order', 'asc');
+        const search = getOrDefaultParam('search', '');
+        const tags = getOrDefaultParam('tags', []); // string[] of tag names/ids
+        const author = getOrDefaultParam('author', '');
+
+        BlogService.fetchPage(page, size, order, search, tags, author).then((res) => {
+            const {data} = res;
+            setData(data);
+            setBlogs(res.data.blogs);
+            setFetched(true);
+            setError(false);
+            setNoBlogs(res.data.blogs.length === 0);
+            setTotalPages(res.data.totalPages);
+        }).catch(err => {
+            setError(true);
+            setFetched(true);
+        });
+    }
+
+};
+
+export default Index;
+
+function getOrDefaultParam(param: string, defaultValue: any, context: any): any {
+    const query = context.query;
+    if (query[param] == null) {
+        return defaultValue;
+    }
+    return query[param];
+}
