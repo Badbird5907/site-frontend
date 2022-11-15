@@ -18,9 +18,9 @@ const BlogList = (props: any) => {
                     const timestamp: number = item.timestamp;
                     const author: string = item.author;
                     const authorImg: string = item.authorImg;
-                    const safeName: string = item.safeName; // URLencoded title, also used to access blog
+                    const safeName: string = item.safeName; // URLEncoded title, also used to access blog
                     const location: any = item.location; // json object of where the markdown files are hosted, ignore
-                    const imageURL: string = item.image;
+                    const imageURL: string = item.imageURL;
                     const description: string = item.description;
                     const date = moment(timestamp).format("MM/DD/YYYY, h:mm A");
                     return (

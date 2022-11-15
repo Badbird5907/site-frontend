@@ -24,6 +24,7 @@ const EditOrCreateBlog = (props: any) => {
 
     const [content, setContent]: any = useState('');
     const [url, setURL]: any = useState('');
+    const [imageURL, setImageURL]: any = useState('');
 
     const [selectedTagsFromBlog, setSelectedTagsFromBlog]: any = useState(null); // An array of selected tags from the blog
     const [selectedTags, setSelectedTags]: any = useState(null); // An array of selected tags from the blog
@@ -35,7 +36,7 @@ const EditOrCreateBlog = (props: any) => {
 
     const [canRenderTags, setCanRenderTags] = useState(false);
 
-    useEffect(()=> {
+    useEffect(() => {
         if (!AuthService.isLoggedIn()) {
             window.location.href = '/login' // It doesn't matter if people can access this page, since the API is protected
         }
@@ -63,6 +64,9 @@ const EditOrCreateBlog = (props: any) => {
                     if (res.data.authorImg) {
                         setCustomAuthorImg(res.data.authorImg);
                     }
+                }
+                if (res.data.imageURL) {
+                    setImageURL(res.data.imageURL);
                 }
 
                 const t = res.data.tags;
@@ -103,6 +107,7 @@ const EditOrCreateBlog = (props: any) => {
             setTitle('');
             setDescription('');
             setURL('');
+            setImageURL('');
             setSelectedTagsFromBlog([])
             setCanRender(true);
         }
@@ -135,7 +140,8 @@ const EditOrCreateBlog = (props: any) => {
                     customAuthor,
                     customAuthorImg,
                     timestampNum,
-                    id as string
+                    id as string,
+                    imageURL as string
                 ).then((res) => {
                     Swal.fire({
                         title: 'Success!',
@@ -169,7 +175,8 @@ const EditOrCreateBlog = (props: any) => {
                     tags,
                     customAuthor,
                     customAuthorImg,
-                    timestampNum
+                    timestampNum,
+                    imageURL as string
                 ).then((res) => {
                     Swal.fire({
                         title: 'Success!',
@@ -310,6 +317,16 @@ const EditOrCreateBlog = (props: any) => {
                                 }}/>
                                 <FormHelperText id="description-helper-text">Direct URL to markdown
                                     file</FormHelperText>
+                            </div>
+                            <div id={"img-url"}>
+                                <TextField id="img-url" label={"Image URL"} variant={"outlined"}
+                                           defaultValue={imageURL}
+                                           sx={{
+                                               width: '100%'
+                                           }} onChange={(newValue) => {
+                                    setImageURL(newValue.target.value);
+                                }}/>
+                                <FormHelperText id="description-helper-text">Direct URL to image</FormHelperText>
                             </div>
                             <div id={"tags"}>
                                 {

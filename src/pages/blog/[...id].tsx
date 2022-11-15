@@ -1,13 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-//import {tomorrow} from 'react-syntax-highlighter/dist/esm/styles/prism'
-//import {Avatar, Chip, Container, Fab, Stack} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
 import Stack from "@mui/material/Stack";
-//import {WatchLater} from "@mui/icons-material";
 import WatchLater from "@mui/icons-material/WatchLater";
 import moment from "moment";
 import {backendURL} from '../../services/APIService';
@@ -19,7 +16,7 @@ import styles from '../../styles/components/ViewBlog.module.css'
 import MarkdownRenderer from "../../components/MarkdownRenderer";
 import BlogService from "../../services/BlogService";
 
-const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https://nextjs.org/learn/basics/data-fetching/implement-getstaticprops
+const ViewBlog = (props: any) => {
     const router = useRouter();
     const {id} = router.query;
     const {data, timestamp, tags, error, githubURL, author, authorImg, errorData} = props;
@@ -31,7 +28,7 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
     }, [])
 
     if (error) {
-        var ghUrl = null;
+        let ghUrl = null;
         if (githubURL) {
             ghUrl = <a href={githubURL} target="_blank" rel="noreferrer">View on GitHub</a>
         }
@@ -40,10 +37,10 @@ const ViewBlog = (props: any) => { // TODO: Use getStaticProps for SSR - https:/
                 <h1>Error!</h1>
                 {ghUrl ? <h2>{ghUrl}</h2> : null}
                 {
-                    AuthService.isLoggedIn() && errorData && errorData.id ? (
+                    loggedIn && errorData.data && errorData.data.id ? (
                         <Fab color="primary" aria-label="add" onClick={() => {
                             if (typeof window !== 'undefined')
-                                window.location.href = "/admin/blog/" + errorData.id;
+                                window.location.href = "/admin/blog/edit/" + errorData.data.id;
                         }} sx={{
                             position: 'fixed',
                             bottom: 16,
@@ -146,14 +143,15 @@ export default ViewBlog;
 export async function getStaticProps(context: any) {
     let data = null,
         error = false,
-        errorData = null,
         githubURL = null,
         timestamp = null,
         tags = null,
         author = null,
-        authorImg = null;
+        authorImg = null,
+        errorData = null;
 
-    const id = context.params.id;
+    const
+        id = context.params.id;
 
     // We don't need this now, since we're using static gen
     //const {req, res} = context;
@@ -189,7 +187,18 @@ export async function getStaticProps(context: any) {
             authorImg = "https://cdn.badbird.dev/assets/user.jpg";
         }
         data = res.data;
-    })
+    }).catch(
+        (err) => {
+            console.log("Error: " + err);
+            error = true;
+            if (err.response) {
+                errorData = err.response.data;
+                if (err.response.data.githubURL) {
+                    githubURL = err.response.data.githubURL;
+                }
+            }
+        }
+    )
 
     return {
         props: {
