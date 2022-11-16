@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
@@ -16,11 +16,21 @@ import styles from '../../styles/components/ViewBlog.module.css'
 import MarkdownRenderer from "../../components/MarkdownRenderer";
 import BlogService from "../../services/BlogService";
 import Head from "next/head";
+import { serialize } from 'next-mdx-remote/serialize'
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import rehypeCodeTitles from "rehype-code-titles";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import {getTweets} from "../../utils/tweets";
+
+const TWEET_RE = /<StaticTweet\sid="[0-9]+"\s\/>/g;
 
 const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
     const router = useRouter();
     const {id} = router.query;
     const {data, timestamp, tags, error, githubURL, author, authorImg, errorData} = props;
+    const {source} = props
 
     const [loggedIn, setLoggedIn] = useState(false);
 
@@ -124,7 +134,7 @@ const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
                             <h1 className={"centered border-bottom"}></h1>
                         </div>
                         <article className={styles.markdownBody}>
-                            <MarkdownRenderer content={data.content}/>
+                            <MarkdownRenderer source={source}/>
                         </article>
                     </Container>
 
@@ -161,7 +171,9 @@ export async function getStaticProps(context: any) {
         tags = null,
         author = null,
         authorImg = null,
-        errorData = null;
+        errorData = null,
+        mdxSource = null,
+        content = null;
 
     const
         id = context.params.id;
@@ -176,7 +188,10 @@ export async function getStaticProps(context: any) {
     if (id == null) return {props: {}};
 
     console.log("Fetching blog with id: " + id);
+    console.log('Backend URL: ' + backendURL);
+    let aRes: AxiosResponse<any>;
     await axios.get(backendURL + "blog/content/get/" + id).then((res) => {
+        aRes = res;
         console.log("Got response: " + res.data);
         if (res.data.githubURL) {
             githubURL = res.data.githubURL;
@@ -199,6 +214,9 @@ export async function getStaticProps(context: any) {
         } else {
             authorImg = "https://cdn.badbird.dev/assets/user.jpg";
         }
+        if (res.data.content) {
+            content = res.data.content;
+        }
         data = res.data;
     }).catch(
         (err) => {
@@ -212,6 +230,23 @@ export async function getStaticProps(context: any) {
             }
         }
     )
+    // parse content for <Tweet id="1234567890" />
+    const tweetMatch = content.match(TWEET_RE);
+    console.log("Tweet match: " + tweetMatch);
+    const tweetIDs = tweetMatch?.map((mdxTweet) => {
+        const id = mdxTweet.match(/[0-9]+/g)![0];
+        return id;
+    });
+
+    const tweets =
+        tweetIDs && tweetIDs.length > 0 ? await getTweets(tweetIDs) : {};
+
+    mdxSource = await serialize(content, {
+        mdxOptions: {
+            rehypePlugins: [remarkGfm, rehypeSlug, rehypeKatex, rehypeCodeTitles],
+            remarkPlugins: [remarkMath],
+        }
+    });
 
     return {
         props: {
@@ -222,7 +257,9 @@ export async function getStaticProps(context: any) {
             timestamp,
             tags,
             author,
-            authorImg
+            authorImg,
+            source: mdxSource,
+            tweets
         }
     }
 }
