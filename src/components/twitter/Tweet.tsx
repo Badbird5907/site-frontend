@@ -2,9 +2,10 @@ import Image from 'next/image';
 import {LikeIcon, ReplyIcon, RetweetIcon, TwitterLogo} from './Icons';
 import React from 'react';
 import {ActionIcons, ImageGrid, Name, singleImage, SingleImageWrapper, TweetWrapper,} from './Styles';
-import {Avatar} from "@mui/material";
+import {Avatar, Stack} from "@mui/material";
 import {TransformedTweet} from "../../utils/tweets";
 import moment from "moment";
+import styles from '../../styles/components/Tweet.module.css';
 
 interface Props {
     tweet: TransformedTweet;
@@ -52,26 +53,31 @@ const Tweet = (props: Props) => {
                     display: "flex",
                     alignItems: "center",
                 }}>
-                    <Avatar
-                        alt={author.username}
-                        sx={{width: 48, height: 48}}
-                        src={author.profile_image_url}
-                    />
-                    <Name
-                        href={authorURL}
-                        className="author"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span
+                    <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                        <Avatar
+                            alt={author.username}
+                            sx={{width: 48, height: 48}}
+                            src={author.profile_image_url}
+                        />
+                        <Name
+                            href={authorURL}
+                            className="author"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
-                                marginBottom: 0, lineHeight: '1.5',
-                                margin: '0 0 2.25rem 0', padding: 0,
-                                textRendering: 'optimizeLegibility',
-                                color: "white", fontSize: '1.5rem',
+                                textDecoration: "none"
                             }}
-                        >{author.name}
-                            {/*
+                        >
+                            <span
+                                style={{
+                                    marginBottom: 0, lineHeight: '1.5',
+                                    margin: '0 0 2.25rem 0', padding: 0,
+                                    textRendering: 'optimizeLegibility',
+                                    color: "white", fontSize: '1.5rem',
+                                    textDecoration: 'none',
+                                }}
+                            >{author.name}
+                                {/*
                             {author.verified ? (
                                 <svg
                                     aria-label="Verified Account"
@@ -85,7 +91,7 @@ const Tweet = (props: Props) => {
                             ) : null}
                             */}
                         </span>
-                        {/* <Text
+                            {/* <Text
                             css={{ marginBottom: 0, lineHeight: 'initial' }}
                             variant="tertiary"
                             title={`@${author.username}`}
@@ -93,6 +99,9 @@ const Tweet = (props: Props) => {
                         >
                             @{author.username}
                         </Text> */}
+
+                        </Name>
+
                         <span
                             style={{
                                 marginBottom: 0, lineHeight: 'initial',
@@ -100,7 +109,7 @@ const Tweet = (props: Props) => {
                             }}>
                             @{author.username}
                         </span>
-                    </Name>
+                    </Stack>
                 </div>
                 <a
                     href={tweetURL}
@@ -170,7 +179,7 @@ const Tweet = (props: Props) => {
             {quoteTweet ? <Tweet tweet={{...quoteTweet}}/> : null}
             <a
                 style={{
-                    color: "gray"
+                    color: "gray", textDecoration: "none"
                 }}
                 href={tweetURL}
                 target="_blank"
@@ -180,7 +189,6 @@ const Tweet = (props: Props) => {
                     title={`Time Posted: ${createdAt.toUTCString()}`}
                     dateTime={createdAt.toISOString()}
                 >
-                    {/* format(createdAt, 'h:mm a - MMM d, y') Use moment.js */}
                     {moment(createdAt).format('h:mm a - MMM d, y')}
                 </time>
             </a>
@@ -190,22 +198,50 @@ const Tweet = (props: Props) => {
                     marginTop: '1rem',
                 }}
             >
-                <ActionIcons href={replyURL} target="_blank" rel="noopener noreferrer">
-                    <ReplyIcon/>
-                    <span>{public_metrics.reply_count}</span>
-                </ActionIcons>
-                <ActionIcons
-                    href={retweetURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <RetweetIcon/>
-                    <span>{public_metrics.retweet_count}</span>
-                </ActionIcons>
-                <ActionIcons href={likeURL} target="_blank" rel="noopener noreferrer">
-                    <LikeIcon/>
-                    <span>{public_metrics.like_count}</span>
-                </ActionIcons>
+                <Stack direction={"row"} spacing={2}>
+                    <ActionIcons href={replyURL} target="_blank" rel="noopener noreferrer"
+                                 onClick={() => {
+                                     if (typeof window !== 'undefined') {
+                                         window.open(retweetURL, '_blank')
+                                     }
+                                 }}
+                                 className={styles.actionIcon + ' ' + styles.comment}
+                    >
+                        <Stack direction="row" spacing={1}>
+                            <ReplyIcon/>
+                            <span>{public_metrics.reply_count}</span>
+                        </Stack>
+                    </ActionIcons>
+                    <ActionIcons
+                        href={retweetURL}
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                window.open(retweetURL, '_blank')
+                            }
+                        }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.actionIcon + ' ' + styles.retweet}
+                    >
+                        <Stack direction="row" spacing={1}>
+                            <RetweetIcon/>
+                            <span>{public_metrics.retweet_count}</span>
+                        </Stack>
+                    </ActionIcons>
+                    <ActionIcons href={likeURL} target="_blank" rel="noopener noreferrer"
+                                 onClick={() => {
+                                     if (typeof window !== 'undefined') {
+                                         window.open(likeURL, '_blank')
+                                     }
+                                 }}
+                                 className={styles.actionIcon + ' ' + styles.like}
+                    >
+                        <Stack direction="row" spacing={1}>
+                            <LikeIcon/>
+                            <span>{public_metrics.like_count}</span>
+                        </Stack>
+                    </ActionIcons>
+                </Stack>
             </div>
         </TweetWrapper>
     );

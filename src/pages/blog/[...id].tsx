@@ -29,7 +29,7 @@ const TWEET_RE = /<StaticTweet\sid="[0-9]+"\s\/>/g;
 const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
     const router = useRouter();
     const {id} = router.query;
-    const {data, timestamp, tags, error, githubURL, author, authorImg, errorData} = props;
+    const {data, timestamp, tags, error, githubURL, author, authorImg, errorData, tweets} = props;
     const {source} = props
 
     const [loggedIn, setLoggedIn] = useState(false);
@@ -37,13 +37,6 @@ const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
     useEffect(() => {
         setLoggedIn(AuthService.isLoggedIn())
     }, [])
-
-    React.useEffect(() => { // https://github.com/vercel/next.js/discussions/15262
-        const s = document.createElement("script");
-        s.setAttribute("src", "https://platform.twitter.com/widgets.js");
-        s.setAttribute("async", "true");
-        document.head.appendChild(s);
-    }, []);
 
     if (error) {
         let ghUrl = null;
@@ -134,7 +127,7 @@ const ViewBlog = (props: any) => { // TODO use MDX instead of react-markdown
                             <h1 className={"centered border-bottom"}></h1>
                         </div>
                         <article className={styles.markdownBody}>
-                            <MarkdownRenderer source={source}/>
+                            <MarkdownRenderer tweets={tweets} source={source}/>
                         </article>
                     </Container>
 
@@ -240,7 +233,7 @@ export async function getStaticProps(context: any) {
 
     const tweets =
         tweetIDs && tweetIDs.length > 0 ? await getTweets(tweetIDs) : {};
-
+    console.log('resolved tweets: ', tweets)
     mdxSource = await serialize(content, {
         mdxOptions: {
             rehypePlugins: [remarkGfm, rehypeSlug, rehypeKatex, rehypeCodeTitles],

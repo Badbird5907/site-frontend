@@ -28,7 +28,7 @@
     flex-direction: column;
     margin-left: 1rem;
     color: white;
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .imageGrid {
@@ -53,4 +53,21 @@
 }
 .singleImage {
     border-radius: 0.5em;
+}
+
+.actionIcon {
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+.actionIcon:hover {
+    scale: 1.2;
+}
+.comment:hover {
+    color: #1da1f2;
+}
+.retweet:hover {
+    color: #17bf63;
+}
+.like:hover {
+    color: #e0245e;
 }

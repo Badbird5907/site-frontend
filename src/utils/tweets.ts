@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 import qs from 'qs';
+import axios from "axios";
 
 export const getTweets = async (ids: string[]) => {
     const queryParams = qs.stringify({
@@ -35,6 +36,9 @@ export const getTweets = async (ids: string[]) => {
             'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics',
     });
 
+    console.log('Twitter API: ', process.env.TWITTER_API_KEY)
+
+    /*
     const response = await fetch(
         `https://api.twitter.com/2/tweets?${queryParams}`,
         {
@@ -43,8 +47,17 @@ export const getTweets = async (ids: string[]) => {
             },
         }
     );
+     */
+    const res = await axios.get(`https://api.twitter.com/2/tweets?${queryParams}`, {
+        headers: {
+            Authorization: `Bearer ${process.env.TWITTER_API_KEY}`,
+        }
+    })
 
-    const tweets = (await response.json()) as RawTweetType;
+    const tweets = (await res.data) as RawTweetType;
+    if (!tweets) {
+        throw new Error('No tweets found');
+    }
 
     const getAuthorInfo = (author_id: string) => {
         return tweets.includes.users.find((user) => user.id === author_id)!;
