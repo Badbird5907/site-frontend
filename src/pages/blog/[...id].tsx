@@ -224,15 +224,17 @@ export async function getStaticProps(context: any) {
         }
     )
     // parse content for <Tweet id="1234567890" />
-    const tweetMatch = content.match(TWEET_RE);
-    console.log("Tweet match: " + tweetMatch);
-    const tweetIDs = tweetMatch?.map((mdxTweet) => {
-        const id = mdxTweet.match(/[0-9]+/g)![0];
-        return id;
-    });
+    let tweetIDs = null, tweets = null;
+    if (content) {
+        const tweetMatch = content.match(TWEET_RE);
+        console.log("Tweet match: " + tweetMatch);
+        tweetIDs = tweetMatch?.map((mdxTweet) => {
+            const id = mdxTweet.match(/[0-9]+/g)![0];
+            return id;
+        });
+        tweets = tweetIDs && tweetIDs.length > 0 ? await getTweets(tweetIDs) : {};
+    }
 
-    const tweets =
-        tweetIDs && tweetIDs.length > 0 ? await getTweets(tweetIDs) : {};
     console.log('resolved tweets: ', tweets)
     mdxSource = await serialize(content, {
         mdxOptions: {
