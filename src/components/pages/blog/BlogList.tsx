@@ -11,7 +11,7 @@ const BlogList = (props: any) => {
     const loggedIn = AuthService.isLoggedIn();
     console.log('logged in: ' + loggedIn);
     if (data) {
-        console.log('Data', data);
+        //console.log('Data', data);
         return (
             <div className={styles.row}>
                 {data.map((item: any) => {
