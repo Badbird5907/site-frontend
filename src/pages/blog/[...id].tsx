@@ -227,7 +227,6 @@ export async function getStaticProps(context: any) {
     let tweetIDs = null, tweets = null;
     if (content) {
         const tweetMatch = content.match(TWEET_RE);
-        console.log("Tweet match: " + tweetMatch);
         tweetIDs = tweetMatch?.map((mdxTweet: any) => {
             const id = mdxTweet.match(/[0-9]+/g)![0];
             return id;
@@ -235,7 +234,6 @@ export async function getStaticProps(context: any) {
         tweets = tweetIDs && tweetIDs.length > 0 ? await getTweets(tweetIDs) : {};
     }
 
-    console.log('resolved tweets: ', tweets)
     mdxSource = await serialize(content, {
         mdxOptions: {
             rehypePlugins: [remarkGfm, rehypeSlug, rehypeKatex, rehypeCodeTitles],

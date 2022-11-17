@@ -38,6 +38,10 @@ class BlogService {
     fetchLatestPage() {
         return this.fetchPage(1, 15, 'asc', '', [], '');
     }
+
+    getBlogMeta(id: string) {
+        return axios.get(API_URL + 'meta/get/' + id);
+    }
 }
 
 export default new BlogService();

@@ -25,6 +25,9 @@ import qs from 'qs';
 import axios from "axios";
 
 export const getTweets = async (ids: string[]) => {
+    if (!process.env.TWITTER_API_KEY) {
+        return {};
+    }
     const queryParams = qs.stringify({
         ids: ids.join(','),
         expansions:

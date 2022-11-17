@@ -1,15 +1,63 @@
 import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
 import EditOrCreateBlog from "../EditOrCreateBlog";
+import {Button} from "@mui/material";
+import axios from "axios";
+import Swal from "sweetalert2";
+import {addAuthHeaders} from "../../../../services/APIService";
+import BlogService from "../../../../services/BlogService";
+import BlogAdminService from "../../../../services/BlogAdminService";
 
 const Edit = () => {
     const router = useRouter();
     const {id} = router.query;
+
+    const [data, setData] = React.useState(null);
     useEffect(() => {
         console.log('ID: ', id);
+        if (id) {
+            BlogService.getBlogMeta(id).then((res) => {
+                setData(res.data);
+            });
+        }
     }, [id]);
     return (
         <>
+            {data ? <Button onClick={()=> {
+                Swal.fire({
+                    title: 'Revalidating Page...',
+                    text: 'Please wait...',
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    allowEnterKey: false,
+                    allowEscapeKey: false,
+                })
+                // post /admin/revalidate
+                axios.post('/api/revalidate', {
+                    id: data.safeName
+                }, addAuthHeaders()).then((res) => {
+                    if (res.data && res.data.success) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Revalidation successful',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Revalidation failed',
+                            icon: 'error'
+                        });
+                    }
+                }).catch((err)=> {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Revalidation failed',
+                        icon: 'error'
+                    });
+                })
+            }}>Rebuild Page</Button> : null}
             <EditOrCreateBlog
                 editing={true}
                 id={id}/>

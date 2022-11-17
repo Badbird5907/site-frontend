@@ -64,6 +64,18 @@ class AuthService {
             });
     }
 
+    checkToken(token: string) {
+        return axios
+            .post(API_URL + "check", {
+                token: token
+            }, {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+    }
+
+
     changePassword(password: string, oldPassword: string) {
         const token = this.getCurrentUser().token;
         return axios.post(API_URL + "changepwd", {
