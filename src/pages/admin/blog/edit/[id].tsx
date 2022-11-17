@@ -6,7 +6,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import {addAuthHeaders} from "../../../../services/APIService";
 import BlogService from "../../../../services/BlogService";
-import BlogAdminService from "../../../../services/BlogAdminService";
 
 const Edit = () => {
     const router = useRouter();
@@ -16,7 +15,7 @@ const Edit = () => {
     useEffect(() => {
         console.log('ID: ', id);
         if (id) {
-            BlogService.getBlogMeta(id).then((res) => {
+            BlogService.getBlogMeta(id as string).then((res) => {
                 setData(res.data);
             });
         }
