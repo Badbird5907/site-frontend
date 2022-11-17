@@ -7,8 +7,7 @@ import GHColorsPrism from "../utils/GHColors.prism";
 import Link from "next/link";
 import Tweet from "./twitter";
 
-
-function code({className, ...props}) {
+function code({className, ...props}: any) {
     const match = /language-(\w+)/.exec(className || '')
     {/* <SyntaxHighlighter language={match[1]} PreTag="div" {...props} /> */
     }
@@ -23,7 +22,7 @@ function code({className, ...props}) {
         : <code className={className} {...props} />
 }
 
-function h1({id, className, ...rest}) {
+function h1({id, className, ...rest}: any) {
     if (id) {
         return (
             <Link href={`#${id}`} className={styles.headerBefore}>
@@ -35,7 +34,7 @@ function h1({id, className, ...rest}) {
 }
 
 const MarkdownRenderer = (props: any) => {
-    const {source} = props;
+    const {source}: any = props;
     const StaticTweet = ({id}: { id: string }) => {
         if (props.tweets)
             return <Tweet tweet={props.tweets[id]}/>;
