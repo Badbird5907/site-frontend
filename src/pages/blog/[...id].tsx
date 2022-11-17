@@ -209,7 +209,7 @@ export async function getStaticProps(context: any) {
         }
         if (res.data.content) {
             content = res.data.content;
-        }
+        } else content = 'Could not find content.';
         data = res.data;
     }).catch(
         (err) => {
