@@ -39,6 +39,7 @@ const Tweet = (props: Props) => {
     const tweetURL = `https://twitter.com/${author.username}/status/${id}`;
     const createdAt = new Date(created_at);
 
+
     const quoteTweet =
         referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
@@ -52,7 +53,13 @@ const Tweet = (props: Props) => {
                 <div style={{
                     display: "flex",
                     alignItems: "center",
-                }}>
+                    cursor: "pointer",
+                }}
+                     onClick={() => {
+                         if (typeof window !== 'undefined') {
+                             window.open(authorURL, '_blank');
+                         }
+                     }}>
                     <Stack direction={"row"} spacing={2} alignItems={"center"}>
                         <Avatar
                             alt={author.username}
