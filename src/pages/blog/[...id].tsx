@@ -166,7 +166,7 @@ export async function getStaticProps(context: any) {
         authorImg = null,
         errorData = null,
         mdxSource = null,
-        content = null;
+        content: any = null;
 
     const
         id = context.params.id;
@@ -228,7 +228,7 @@ export async function getStaticProps(context: any) {
     if (content) {
         const tweetMatch = content.match(TWEET_RE);
         console.log("Tweet match: " + tweetMatch);
-        tweetIDs = tweetMatch?.map((mdxTweet) => {
+        tweetIDs = tweetMatch?.map((mdxTweet: any) => {
             const id = mdxTweet.match(/[0-9]+/g)![0];
             return id;
         });
