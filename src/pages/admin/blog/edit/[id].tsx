@@ -11,7 +11,7 @@ const Edit = () => {
     const router = useRouter();
     const {id} = router.query;
 
-    const [data, setData] = React.useState(null);
+    const [data, setData]: any = React.useState(null);
     useEffect(() => {
         console.log('ID: ', id);
         if (id) {
@@ -32,9 +32,10 @@ const Edit = () => {
                     allowEnterKey: false,
                     allowEscapeKey: false,
                 })
+                const {safeName}: string = data;
                 // post /admin/revalidate
                 axios.post('/api/revalidate', {
-                    id: data.safeName
+                    id: safeName
                 }, addAuthHeaders()).then((res) => {
                     if (res.data && res.data.success) {
                         Swal.fire({
