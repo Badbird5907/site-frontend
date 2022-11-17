@@ -6,7 +6,7 @@ import styles from "../../styles/components/Tweet.module.css"
 export const TweetWrapper = ({children}: any) => {
     return <div className={styles.tweetWrapper}>{children}</div>
 }
-export const Name = ({children, ...props}) => <a className={styles.name} {...props}>{children}</a>;
+export const Name = ({children, ...props}: any) => <a className={styles.name} {...props}>{children}</a>;
 
 export const ImageGrid = ({children}: any) => {
     return <div className={styles.imageGrid}>{children}</div>
