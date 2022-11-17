@@ -32,7 +32,7 @@ const Edit = () => {
                     allowEnterKey: false,
                     allowEscapeKey: false,
                 })
-                const {safeName}: string = data;
+                const {safeName}: any = data;
                 // post /admin/revalidate
                 axios.post('/api/revalidate', {
                     id: safeName
