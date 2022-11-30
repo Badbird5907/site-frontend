@@ -38,7 +38,8 @@ export async function getStaticProps(context: any) {
             order,
             search,
             tags,
-            author
+            author,
+            revalidate: 10 // probally should make this higher but I want to test something
         }
     }
 }
