@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
 import BlogAdminService, {Location} from "../../../services/BlogAdminService";
 import {Button, Fab, FormControl, FormHelperText, Stack, TextField} from "@mui/material";
 import {DateTimePicker} from "@mui/x-date-pickers";
 import moment from "moment";
-import MDEditor from '@uiw/react-md-editor';
 import SaveIcon from '@mui/icons-material/Save';
 import TagsService, {ETagIcon} from "../../../services/TagsService";
-import TagsList from "./components/TagsList";
+import TagsList from "../../../components/pages/admin/blogs/TagsList";
 import {useSnackbar} from "notistack";
 import Swal from "sweetalert2";
 
+import AuthService from "../../../services/AuthService";
+
 const EditOrCreateBlog = (props: any) => {
-    const params = useParams();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const editing = props.editing;
-    const id = params.id;
+    const id = props.id;
     const [canRender, setCanRender] = useState(false);
     const [data, setData]: any = useState(null);
     const [timestamp, setTimestamp]: any = useState(null);
@@ -25,6 +24,7 @@ const EditOrCreateBlog = (props: any) => {
 
     const [content, setContent]: any = useState('');
     const [url, setURL]: any = useState('');
+    const [imageURL, setImageURL]: any = useState('');
 
     const [selectedTagsFromBlog, setSelectedTagsFromBlog]: any = useState(null); // An array of selected tags from the blog
     const [selectedTags, setSelectedTags]: any = useState(null); // An array of selected tags from the blog
@@ -37,7 +37,14 @@ const EditOrCreateBlog = (props: any) => {
     const [canRenderTags, setCanRenderTags] = useState(false);
 
     useEffect(() => {
+        if (!AuthService.isLoggedIn()) {
+            window.location.href = '/login' // It doesn't matter if people can access this page, since the API is protected
+        }
+    }, [])
+
+    useEffect(() => {
         if (editing) {
+            if (id == undefined) return; // Wait for id to be set
             BlogAdminService.getMetadata(id as string).then((res) => {
                 console.log('--------------------------------------------')
                 console.log('Data: ', res.data);
@@ -58,6 +65,9 @@ const EditOrCreateBlog = (props: any) => {
                         setCustomAuthorImg(res.data.authorImg);
                     }
                 }
+                if (res.data.imageURL) {
+                    setImageURL(res.data.imageURL);
+                }
 
                 const t = res.data.tags;
                 if (t) {
@@ -70,12 +80,15 @@ const EditOrCreateBlog = (props: any) => {
                 setData(res.data);
             }).catch((err) => {
                 console.log('Error: ', err);
+                /*
                 Swal.fire({
                     title: 'Error',
                     text: 'There was an error while fetching the blog metadata. Please try again later.',
                     icon: 'error',
                     confirmButtonText: 'Okay'
                 });
+                 */
+
                 setError(true);
                 setCanRender(false)
             });
@@ -94,10 +107,11 @@ const EditOrCreateBlog = (props: any) => {
             setTitle('');
             setDescription('');
             setURL('');
+            setImageURL('');
             setSelectedTagsFromBlog([])
             setCanRender(true);
         }
-    }, [])
+    }, [id])
 
     useEffect(() => {
         fetchTags();
@@ -126,14 +140,16 @@ const EditOrCreateBlog = (props: any) => {
                     customAuthor,
                     customAuthorImg,
                     timestampNum,
-                    id as string
+                    id as string,
+                    imageURL as string
                 ).then((res) => {
                     Swal.fire({
                         title: 'Success!',
                         text: 'Blog post edited successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.reload();
+                        if (typeof window !== 'undefined')
+                            window.location.reload();
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -159,14 +175,16 @@ const EditOrCreateBlog = (props: any) => {
                     tags,
                     customAuthor,
                     customAuthorImg,
-                    timestampNum
+                    timestampNum,
+                    imageURL as string
                 ).then((res) => {
                     Swal.fire({
                         title: 'Success!',
                         text: 'Blog post created successfully!',
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/blog/' + res.data.url;
+                        if (typeof window !== 'undefined')
+                            window.location.href = '/blog/' + res.data.url;
                     });
                 }).catch((err) => {
                     console.error(err);
@@ -215,7 +233,7 @@ const EditOrCreateBlog = (props: any) => {
             console.log('new-Selected tags: ', selectedTags);
             console.log('new-Available tags: ', availableTags);
             setCanRender(true);
-            setTimeout(()=> {
+            setTimeout(() => {
                 setCanRenderTags(true)
             }, 1000) // This is to fix race condition
         });
@@ -234,7 +252,8 @@ const EditOrCreateBlog = (props: any) => {
             {canRender && data && allTags ?
                 <>
                     <br/>
-                    {editing ? <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
+                    {editing ?
+                        <Button href={"/blog/" + data.safeName} variant={"outlined"}>View blog</Button> : null}
                     <br/>
                     <FormControl>
                         {/* TODO: I'm hardcoding this with stack, too tired to mess with grid again */}
@@ -268,10 +287,23 @@ const EditOrCreateBlog = (props: any) => {
                                 </div>
                             </Stack>
                             <div>
-                                <MDEditor
-                                    value={content}
-                                    onChange={setContent}
-                                />
+                                {/*
+                                  <MdEditor style={{ height: '500px' }} renderHTML={(text)=> {
+                                    return <MarkdownRenderer children={text} />
+                                }} onChange={({html, text})=> {
+                                    setContent(text);
+                                }} />
+                                <small style={{
+                                    // grey
+                                    color: '#b8b8b8'
+                                }}>Note that the markdown renderer used for this is different than the one used for
+                                    blogs.</small>
+                                    */}
+
+                                <small style={{
+                                    // grey
+                                    color: '#b8b8b8'
+                                }}>The markdown editor is currently disabled.</small>
                                 {/*
                                 <MDEditor.Markdown source={content} style={{whiteSpace: 'pre-wrap'}}/>
                                 */}
@@ -285,6 +317,16 @@ const EditOrCreateBlog = (props: any) => {
                                 }}/>
                                 <FormHelperText id="description-helper-text">Direct URL to markdown
                                     file</FormHelperText>
+                            </div>
+                            <div id={"img-url"}>
+                                <TextField id="img-url" label={"Image URL"} variant={"outlined"}
+                                           defaultValue={imageURL}
+                                           sx={{
+                                               width: '100%'
+                                           }} onChange={(newValue) => {
+                                    setImageURL(newValue.target.value);
+                                }}/>
+                                <FormHelperText id="description-helper-text">Direct URL to image</FormHelperText>
                             </div>
                             <div id={"tags"}>
                                 {

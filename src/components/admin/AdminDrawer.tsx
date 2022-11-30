@@ -43,7 +43,7 @@ const list = () => (
                 </ListItemButton>
             </ListItem>
             <ListItem key={'blogsIcon'} disablePadding>
-                <ListItemButton href={"/blogs"}>
+                <ListItemButton href={"/blog"}>
                     <ListItemIcon><BookIcon/></ListItemIcon>
                     <ListItemText primary={'Blogs'}/>
                 </ListItemButton>
@@ -54,17 +54,19 @@ const list = () => (
 
 useEffect(()=> {
     // add keypress listener for the 'q + ctrl' key, and call toggleDrawer when it's pressed and only if the user is not typing in an input
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'q' && e.ctrlKey &&
-            !(e.target instanceof HTMLInputElement) &&
-            !(e.target instanceof HTMLTextAreaElement) &&
-            !(e.target instanceof HTMLSelectElement) &&
-            !(e.target instanceof HTMLButtonElement)
-        ) {
-            // @ts-ignore
-            toggleDrawer(true)(e);
-        }
-    });
+    if (typeof document !== 'undefined') {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'q' && e.ctrlKey &&
+                !(e.target instanceof HTMLInputElement) &&
+                !(e.target instanceof HTMLTextAreaElement) &&
+                !(e.target instanceof HTMLSelectElement) &&
+                !(e.target instanceof HTMLButtonElement)
+            ) {
+                // @ts-ignore
+                toggleDrawer(true)(e);
+            }
+        });
+    }
 })
 
 return (

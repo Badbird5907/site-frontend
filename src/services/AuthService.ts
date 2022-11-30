@@ -13,7 +13,8 @@ class AuthService {
             })
             .then(response => {
                 if (response.data.token) {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                    if (typeof localStorage !== 'undefined')
+                        localStorage.setItem("user", JSON.stringify(response.data));
                 } else {
                     console.log('??', response.data);
                 }
@@ -46,7 +47,8 @@ class AuthService {
                     const a = response.data.success;
                     console.log('Token valid:', a)
                     if (!a) {
-                        window.location.href = "/signout"
+                        if (typeof window !== 'undefined')
+                            window.location.href = "/signout"
                     } else {
                         const username = response.data.username;
                         const roles = response.data.roles;
@@ -55,11 +57,24 @@ class AuthService {
                         currentUser.username = username;
                         currentUser.roles = roles;
 
-                        localStorage.setItem("user", JSON.stringify(currentUser));
+                        if (typeof localStorage !== 'undefined')
+                            localStorage.setItem("user", JSON.stringify(currentUser));
                     }
                 }
             });
     }
+
+    checkToken(token: string) {
+        return axios
+            .post(API_URL + "check", {
+                token: token
+            }, {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+    }
+
 
     changePassword(password: string, oldPassword: string) {
         const token = this.getCurrentUser().token;
@@ -74,11 +89,14 @@ class AuthService {
     }
 
     getCurrentUser() {
-        const json = localStorage.getItem('user');
-        if (json === null) {
-            return null;
+        if (typeof localStorage !== 'undefined') {
+            const json = localStorage.getItem('user');
+            if (json === null) {
+                return null;
+            }
+            return JSON.parse(json);
         }
-        return JSON.parse(json);
+        return null;
     }
 
     isLoggedIn() {

@@ -1,0 +1,73 @@
+.tweetWrapper {
+    color: white; /* TODO: figure out colors */
+    border-radius: 0.5em;
+    border: none !important;
+    background-color: #1a1a1a;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    border: solid 1px #2d2d37;
+    box-shadow: 0.5px 1px 1px hsl(0 0% 0% / 0.333);
+
+}
+
+@media (max-width: 700px) {
+    .tweetWrapper {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        border-radius: 0px;
+    }
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    color: white;
+    text-decoration: none !important;
+}
+
+.imageGrid {
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.singleImageWrapper {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.actionIcons {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    color: white;
+    text-decoration: none;
+}
+.singleImage {
+    border-radius: 0.5em;
+}
+
+.actionIcon {
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+.actionIcon:hover {
+    scale: 1.2;
+}
+.comment:hover {
+    color: #1da1f2;
+}
+.retweet:hover {
+    color: #17bf63;
+}
+.like:hover {
+    color: #e0245e;
+}

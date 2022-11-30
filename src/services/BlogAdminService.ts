@@ -11,7 +11,8 @@ class BlogAdminService {
                tags: string[], // UUIDs
                customAuthor: string,
                customAuthorImg: string,
-               timestamp: number = -1
+               timestamp: number = -1,
+               imageURL: string,
     ) {
         if (title == null || title == '') throw new Error("Title is required");
         if (description == null || description == '') throw new Error("Description is required");
@@ -39,6 +40,9 @@ class BlogAdminService {
         if (timestamp != -1) {
             data['timestamp'] = timestamp;
         }
+        if (imageURL && imageURL != '') {
+            data['imageURL'] = imageURL;
+        }
         console.log('sending data: ', data);
         return axios.post(API_URL + 'create/', data, addAuthHeaders());
     }
@@ -50,7 +54,8 @@ class BlogAdminService {
              customAuthor: string,
              customAuthorImg: string,
              timestamp: number = -1,
-             id: string
+             id: string,
+             imageURL: string,
     ) {
         const token = AuthService.getCurrentUser().token;
         if (title == null || title == '') throw new Error("Title is required");
@@ -79,6 +84,9 @@ class BlogAdminService {
         }
         if (timestamp != -1) {
             data['timestamp'] = timestamp;
+        }
+        if (imageURL && imageURL != '') {
+            data['imageURL'] = imageURL;
         }
         console.log('sending data: ', data);
         return axios.post(API_URL + 'edit/' + id, data, {
