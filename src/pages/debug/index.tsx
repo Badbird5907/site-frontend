@@ -15,6 +15,7 @@ const Index = (props: any) => {
                 <span>Mode: {mode}</span>
                 <span>Backend URL: {backendURL}</span>
                 <span>Logged in: {loggedIn ? "true" : "false"}</span>
+                <span>Test123</span>
             </Stack>
         </div>
     );
