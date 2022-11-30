@@ -18,9 +18,10 @@ import BlogList from "../../components/pages/blog/BlogList";
 import AddIcon from "@mui/icons-material/Add";
 import AuthService from "../../services/AuthService";
 import Head from "next/head";
+import {NextPageContext} from "next";
 
-export async function getServerSideProps(context: any) {
-    const page = getOrDefaultParam("page", 1, context);
+export async function getStaticProps(context: any) {
+    const page = getOrDefaultParam('page', 1, context);
     const size = getOrDefaultParam('size', 15, context);
     const order = getOrDefaultParam('order', 'asc', context);
     const search = getOrDefaultParam('search', '', context);
@@ -70,6 +71,11 @@ const Index = (props: any) => {
         TagsService.getTags().then((res) => {
             setAllTags(res.data.tags);
         })
+        /* check if there is a query */
+        const query = window.location.search;
+        if (query) {
+            updatePage();
+        }
     }, [])
 
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -232,7 +238,7 @@ export default Index;
 
 function getOrDefaultParam(param: string, defaultValue: any, context: any): any {
     const query = context.query;
-    if (query[param] == null) {
+    if (!query || !query[param]) {
         return defaultValue;
     }
     return query[param];
