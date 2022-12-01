@@ -2,7 +2,7 @@ import React from 'react';
 import Typewriter from "typewriter-effect";
 import {Button} from "@mui/material";
 //import {Button, Stack} from "@mui/material";
-import styles from './home.module.css'
+import styles from './main.module.css'
 
 const Home = () => {
     return (
