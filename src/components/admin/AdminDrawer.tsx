@@ -48,6 +48,17 @@ const list = () => (
                     <ListItemText primary={'Blogs'}/>
                 </ListItemButton>
             </ListItem>
+            {/*
+            TODO
+            <ListItem key={'revalidateBlogs'} disablePadding>
+                <ListItemButton onClick={()=> {
+
+                }}>
+                    <ListItemIcon><BookIcon/></ListItemIcon>
+                    <ListItemText primary={'Revalidate Blogs'}/>
+                </ListItemButton>
+            </ListItem>
+            */}
         </List>
     </Box>
 );

@@ -35,7 +35,7 @@ const Edit = () => {
                 const {safeName}: any = data;
                 // post /admin/revalidate
                 axios.post('/api/revalidate', {
-                    id: safeName
+                    id: '/blog' + safeName
                 }, addAuthHeaders()).then((res) => {
                     if (res.data && res.data.success) {
                         Swal.fire({
