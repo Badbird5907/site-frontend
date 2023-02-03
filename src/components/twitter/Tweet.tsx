@@ -140,15 +140,20 @@ const Tweet = (props: Props) => {
                 {text}
             </Text>
             */}
-            <a style={{
+            <p style={{
                 marginTop: '1rem',
                 marginBottom: '1rem',
                 whiteSpace: 'pre-wrap',
                 color: "white",
-                textDecoration: "none",
-            }} href={tweetURL}>
+                cursor: "pointer",
+            }} onClick={() => {
+                if (typeof window !== 'undefined') {
+                    window.open(tweetURL, '_blank')
+                }
+            }}>
                 {text}
-            </a>
+            </p>
+
             {media && media.length > 1 ? (
                 <ImageGrid>
                     {media.map((m) => (
