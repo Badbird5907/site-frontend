@@ -33,6 +33,7 @@ const Home = () => {
                     }}>Blog</Button>
                 </div>
                   */}
+                    <Button variant={"outlined"} color={"softBlue"} href={"https://github.com/Badbird5907/"} sx={{}}>Github</Button>
                     <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{}}>Blog</Button>
                 </div>
             </div>
