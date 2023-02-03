@@ -52,6 +52,8 @@ const BlogList = (props: any) => {
                                     <h2 className={"wh-imp centered"} style={{
                                         marginBottom: '0px',
                                         marginTop: '1rem',
+                                        marginLeft: '1rem',
+                                        marginRight: '1rem',
                                     }}>{title}</h2>
                                 </div>
                                 <CardContent sx={{

@@ -18,8 +18,6 @@ import BlogList from "../../components/pages/blog/BlogList";
 import AddIcon from "@mui/icons-material/Add";
 import AuthService from "../../services/AuthService";
 import Head from "next/head";
-import {NextPageContext} from "next";
-
 export async function getStaticProps(context: any) {
     const page = getOrDefaultParam('page', 1, context);
     const size = getOrDefaultParam('size', 15, context);
