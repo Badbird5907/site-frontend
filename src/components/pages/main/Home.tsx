@@ -32,10 +32,13 @@ const Home = () => {
                     }}>Blog</Button>
                 </div>
                   */}
-                    <Stack spacing={2} direction={"row"}>
-                        <Button variant={"outlined"} color={"softBlue"} href={"https://github.com/Badbird5907/"} sx={{}}>Github</Button>
-                        <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{}}>Blog</Button>
-                    </Stack>
+
+                    <div className={"centered"}>
+                        <Stack spacing={2} direction={"row"}>
+                            <Button variant={"outlined"} color={"softBlue"} href={"https://github.com/Badbird5907/"} sx={{}}>Github</Button>
+                            <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{}}>Blog</Button>
+                        </Stack>
+                     </div>
                 </div>
             </div>
         </>
