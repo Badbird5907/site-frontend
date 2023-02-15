@@ -1,7 +1,6 @@
 import React from 'react';
 import Typewriter from "typewriter-effect";
-import {Button} from "@mui/material";
-//import {Button, Stack} from "@mui/material";
+import {Button, Stack} from "@mui/material";
 import styles from './home.module.css'
 
 const Home = () => {
@@ -33,8 +32,10 @@ const Home = () => {
                     }}>Blog</Button>
                 </div>
                   */}
-                    <Button variant={"outlined"} color={"softBlue"} href={"https://github.com/Badbird5907/"} sx={{}}>Github</Button>
-                    <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{}}>Blog</Button>
+                    <Stack spacing={2} direction={"row"}>
+                        <Button variant={"outlined"} color={"softBlue"} href={"https://github.com/Badbird5907/"} sx={{}}>Github</Button>
+                        <Button variant={"contained"} color={"softBlue"} href={"/blog"} sx={{}}>Blog</Button>
+                    </Stack>
                 </div>
             </div>
         </>
